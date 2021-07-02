@@ -26,6 +26,7 @@ const SLUG = 'wporg-internal-notes';
  */
 add_action( 'plugins_loaded', __NAMESPACE__ . '\load' );
 add_action( 'rest_api_init', __NAMESPACE__ . '\initialize_rest_endpoints' );
+add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_editor_assets' );
 
 /**
  * Load PHP files.
@@ -38,7 +39,7 @@ function load() {
 }
 
 /**
- * Turn on API.
+ * Turn on the API.
  *
  * @return void
  */
@@ -52,4 +53,32 @@ function initialize_rest_endpoints() {
 			$controller->register_routes();
 		}
 	}
+}
+
+/**
+ * Set up scripts and styles for the block editor.
+ *
+ * @return void
+ */
+function enqueue_editor_assets() {
+	global $typenow;
+
+	$supported_types = get_post_types_by_support( SLUG );
+	if ( ! in_array( $typenow, $supported_types ) ) {
+		return;
+	}
+
+	$script_asset_path = __DIR__ . "/build/index.asset.php";
+	if ( ! is_readable( $script_asset_path ) ) {
+		throw new \Error( 'You need to run `npm start` or `npm build` to build the assets.' );
+	}
+
+	$script_asset = require( $script_asset_path );
+	wp_enqueue_script(
+		'wporg-internal-notes',
+		plugins_url( 'build/index.js', __FILE__ ),
+		$script_asset['dependencies'],
+		$script_asset['version'],
+		true
+	);
 }

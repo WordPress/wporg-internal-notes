@@ -12,6 +12,8 @@
 	},
 	"scripts": {
 		"wp-env": "wp-env",
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
 		"lint:php": "composer run lint",
 		"format:php": "composer run format"
 	}
