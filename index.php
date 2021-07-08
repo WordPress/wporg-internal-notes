@@ -81,4 +81,11 @@ function enqueue_editor_assets() {
 		$script_asset['version'],
 		true
 	);
+
+	wp_enqueue_style(
+		'wporg-internal-notes',
+		plugins_url( 'build/index.css', __FILE__ ),
+		array(),
+		$script_asset['version']
+	);
 }

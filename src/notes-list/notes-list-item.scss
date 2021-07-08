@@ -1,0 +1,22 @@
+
+.note {
+	margin-bottom: 1rem;
+}
+
+.note-author {
+	display: flex;
+	align-items: center;
+	margin: 0.5rem 0;
+}
+
+.note-author__avatar {
+	margin-right: 0.5rem;
+}
+
+.note-author__name {
+	font-weight: 700;
+}
+
+.note-timestamp {
+	font-style: italic;
+}

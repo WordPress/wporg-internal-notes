@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies.
  */
-import NotesList from './notes-list';
+import NotesList from './notes-list/';
 
 const NotesSidebar = () => {
 	return (
