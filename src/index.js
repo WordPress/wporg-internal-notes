@@ -6,7 +6,7 @@ import { registerPlugin } from '@wordpress/plugins';
 /**
  * Internal dependencies.
  */
-import NotesSidebar from './sidebar';
+import { NotesSidebar } from './sidebar';
 
 const PluginWrapper = () => {
 	return (

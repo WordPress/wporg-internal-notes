@@ -8,10 +8,10 @@ import { useSelect } from '@wordpress/data';
  * Internal dependencies.
  */
 import { store as notesStore } from "../store/";
-import NotesListItem from "./notes-list-item";
+import { NotesListItem } from "./notes-list-item";
 import './index.scss'
 
-const NotesList = () => {
+export const NotesList = () => {
 	const notesQueryArgs = {
 		_embed: true,
 		context: 'edit',
@@ -29,5 +29,3 @@ const NotesList = () => {
 		</PanelBody>
 	);
 };
-
-export default NotesList;

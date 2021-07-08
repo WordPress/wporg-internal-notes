@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import TYPES from './action-types';
+import { TYPES } from './action-types';
 
 const { CREATE_NOTE, FETCH_NOTES } = TYPES;
 
@@ -11,7 +11,7 @@ const DEFAULT_STATE = {
 	notes: [],
 };
 
-const reducer = (
+export const reducer = (
 	state = DEFAULT_STATE,
 	{ note, notes, type }
 ) => {
@@ -30,5 +30,3 @@ const reducer = (
 			return state;
 	}
 }
-
-export default reducer;

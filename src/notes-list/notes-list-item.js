@@ -10,7 +10,7 @@ import { __, sprintf } from '@wordpress/i18n';
  */
 import './notes-list-item.scss'
 
-const NotesListItem = ( { note } ) => {
+export const NotesListItem = ( { note } ) => {
 	const author = note?._embedded?.author?.[0];
 	const timestamp = note?.timestamp?.rendered;
 	const message = note?.message?.rendered;
@@ -43,5 +43,3 @@ const NotesListItem = ( { note } ) => {
 		</li>
 	);
 };
-
-export default NotesListItem;

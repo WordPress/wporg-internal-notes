@@ -7,9 +7,9 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies.
  */
-import NotesList from './notes-list/';
+import { NotesList } from './notes-list/';
 
-const NotesSidebar = () => {
+export const NotesSidebar = () => {
 	return (
 		<PluginSidebar
 			name="wporg-internal-notes-sidebar"
@@ -20,5 +20,3 @@ const NotesSidebar = () => {
 		</PluginSidebar>
 	);
 }
-
-export default NotesSidebar;

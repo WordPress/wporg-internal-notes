@@ -6,7 +6,7 @@ import { apiFetch } from '@wordpress/data-controls';
 /**
  * Internal dependencies.
  */
-import TYPES from './action-types';
+import { TYPES } from './action-types';
 import { getApiPath } from "./utils";
 
 const { CREATE_NOTE, FETCH_NOTES } = TYPES;
