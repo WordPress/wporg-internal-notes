@@ -2,6 +2,7 @@
  * WordPress dependencies.
  */
 import { apiFetch } from '@wordpress/data-controls';
+import { addQueryArgs } from '@wordpress/url';
 
 /**
  * Internal dependencies.
@@ -12,8 +13,13 @@ import { getApiPath } from "./utils";
 const { CREATE_NOTE, FETCH_NOTES } = TYPES;
 
 export function* createNote( noteData ) {
+	const queryArgs = {
+		_embed: true,
+		context: 'edit',
+	};
+
 	const result = yield apiFetch( {
-		path: getApiPath(),
+		path: addQueryArgs( getApiPath(), queryArgs ),
 		method: 'POST',
 		data: noteData,
 	} );

@@ -6,8 +6,6 @@ import { TYPES } from './action-types';
 const { CREATE_NOTE, FETCH_NOTES } = TYPES;
 
 const DEFAULT_STATE = {
-	postId: null,
-	postType: null,
 	notes: [],
 };
 
