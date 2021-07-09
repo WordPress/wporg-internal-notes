@@ -2,14 +2,11 @@
 .note-form {
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
-}
-
-.note-form__toggle {
-	align-self: flex-start;
+	align-items: flex-start;
 }
 
 .note-form__buttons {
+	align-self: flex-end;
 	border: 0;
 
 	> button {
