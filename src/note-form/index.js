@@ -21,6 +21,7 @@ export const NoteForm = () => {
 				label={ __( 'Add a note', 'wporg-internal-notes' ) }
 				value={ message }
 				onChange={ newValue => setMessage( newValue ) }
+				rows="2"
 			/>
 			<Button
 				text={ __( 'Submit', 'wporg-internal-notes' ) }
