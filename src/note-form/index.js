@@ -45,6 +45,7 @@ export const NoteForm = () => {
 								createNote( {
 									message: message,
 								} );
+								setMessage( '' );
 							} }
 							isPrimary
 						/>
