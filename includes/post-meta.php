@@ -64,7 +64,7 @@ function get_notes( $post_id, $args ) {
 
 	$notes = array_slice(
 		$notes,
-		( $args['page'] - 1 ) * $args['per_page'] + 1,
+		( $args['page'] - 1 ) * ( $args['per_page'] + 1 ),
 		$args['per_page']
 	);
 
