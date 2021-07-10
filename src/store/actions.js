@@ -10,7 +10,11 @@ import { addQueryArgs } from '@wordpress/url';
 import { TYPES } from './action-types';
 import { getApiPath } from "./utils";
 
-const { CREATE_NOTE, FETCH_NOTES } = TYPES;
+const { CLEAR_NEW, CREATE_NOTE, FETCH_NOTES } = TYPES;
+
+export const clearNew = () => {
+	return { type: CLEAR_NEW };
+};
 
 export function* createNote( noteData ) {
 	const queryArgs = {

@@ -1,7 +1,11 @@
 /**
+ * External dependencies
+ */
+import classnames from 'classnames';
+
+/**
  * WordPress dependencies.
  */
-import { PanelRow } from '@wordpress/components';
 import { RawHTML } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -10,16 +14,16 @@ import { __, sprintf } from '@wordpress/i18n';
  */
 import './notes-list-item.scss'
 
-export const NotesListItem = ( { note } ) => {
+export const NotesListItem = ( { className, note } ) => {
 	const author = note?._embedded?.author?.[0];
 	const timestamp = note?.timestamp?.rendered;
 	const message = note?.message?.rendered;
 
 	if ( ! author || ! timestamp || ! message ) {
 		return(
-			<PanelRow>
+			<li className={ classnames( 'note note-error', className ) }>
 				{ __( 'Missing data.', 'wporg-internal-notes' ) }
-			</PanelRow>
+			</li>
 		);
 	}
 
@@ -27,7 +31,7 @@ export const NotesListItem = ( { note } ) => {
 	const { slug } = author;
 
 	return (
-		<li className="note">
+		<li className={ classnames( 'note', className ) }>
 			<div className="note-timestamp">{ timestamp }</div>
 			<div className="note-author">
 				<img className="note-author__avatar" src={ avatarUrl } alt="" />

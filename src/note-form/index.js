@@ -15,7 +15,7 @@ import './index.scss';
 export const NoteForm = () => {
 	const [ isAdding, setIsAdding ] = useState( false );
 	const [ message, setMessage ] = useState( '' );
-	const { createNote } = useDispatch( noteStore );
+	const { clearNew, createNote } = useDispatch( noteStore );
 
 	return (
 		<PanelBody className="note-form">
@@ -46,6 +46,9 @@ export const NoteForm = () => {
 									message: message,
 								} );
 								setMessage( '' );
+								setTimeout( () => {
+									clearNew();
+								}, 500 );
 							} }
 							isPrimary
 						/>

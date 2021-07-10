@@ -1,6 +1,17 @@
 
 .note {
-	margin-bottom: 1rem;
+	border-bottom: 1px solid #e0e0e0;
+	margin: 0;
+	padding: 16px 16px 8px;
+	transition: background-color 350ms ease-in-out;
+
+	&:last-of-type {
+		border-bottom: 0;
+	}
+}
+
+.note-new {
+	background-color: lighten( #d54e21, 50% );
 }
 
 .note-author {

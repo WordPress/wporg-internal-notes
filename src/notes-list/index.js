@@ -1,7 +1,6 @@
 /**
  * WordPress dependencies.
  */
-import { PanelBody } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 
 /**
@@ -12,20 +11,29 @@ import { NotesListItem } from "./notes-list-item";
 import './index.scss'
 
 export const NotesList = () => {
-	const notesQueryArgs = {
-		_embed: true,
-		context: 'edit',
-		per_page: 100,
-	};
-	const notes = useSelect( ( select ) => select( notesStore ).getNotes( notesQueryArgs ) );
+	const { notes, hasNewNote } = useSelect( ( select ) => {
+		const notesQueryArgs = {
+			_embed: true,
+			context: 'edit',
+			per_page: 100,
+		};
+		const { getNotes, hasNewNote } = select( notesStore );
+
+		return {
+			notes: getNotes( notesQueryArgs ),
+			hasNewNote: hasNewNote(),
+		};
+	} );
 
 	return (
-		<PanelBody>
-			<ul className="notes-list">
-				{ notes.map(
-					( note, index ) => <NotesListItem key={ `${ index }-${ note.timestamp.raw }` } note={ note } />
-				) }
-			</ul>
-		</PanelBody>
+		<ul className="notes-list">
+			{ notes.map( ( note, index ) =>
+				<NotesListItem
+					key={ `${ index }-${ note.timestamp.raw }` }
+					className={ ( 0 === index && hasNewNote ) ? 'note-new' : '' }
+					note={ note }
+				/>
+			) }
+		</ul>
 	);
 };

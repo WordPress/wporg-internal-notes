@@ -3,10 +3,11 @@
  */
 import { TYPES } from './action-types';
 
-const { CREATE_NOTE, FETCH_NOTES } = TYPES;
+const { CLEAR_NEW, CREATE_NOTE, FETCH_NOTES } = TYPES;
 
 const DEFAULT_STATE = {
 	notes: [],
+	hasNewNote: false,
 };
 
 export const reducer = (
@@ -14,16 +15,22 @@ export const reducer = (
 	{ note, notes, type }
 ) => {
 	switch ( type ) {
+		case CLEAR_NEW:
+			return {
+				...state,
+				hasNewNote: false,
+			};
 		case CREATE_NOTE:
 			return {
 				...state,
 				notes: [ note, ...state.notes ],
-			}
+				hasNewNote: true,
+			};
 		case FETCH_NOTES:
 			return {
 				...state,
-				notes
-			}
+				notes,
+			};
 		default:
 			return state;
 	}

@@ -1,5 +1,6 @@
 
 export const TYPES = {
+	CLEAR_NEW: "CLEAR_NEW",
 	CREATE_NOTE: "CREATE_NOTE",
 	FETCH_NOTES: "FETCH_NOTES",
 };
