@@ -48,7 +48,7 @@ export const NoteForm = () => {
 								setMessage( '' );
 								setTimeout( () => {
 									clearNew();
-								}, 500 );
+								}, 100 );
 							} }
 							isPrimary
 						/>
