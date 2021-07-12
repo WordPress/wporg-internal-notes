@@ -98,9 +98,19 @@ class REST_Controller extends \WP_REST_Controller {
 			return $parent;
 		}
 
-		$parent_post_type_object = get_post_type_object( $this->parent_post_type );
+		switch ( $request->get_method() ) {
+			case \WP_REST_Server::READABLE:
+				$cap = 'read-internal-notes';
+				break;
+			case \WP_REST_Server::CREATABLE:
+				$cap = 'create-internal-note';
+				break;
+			default:
+				$cap = 'do_not_allow';
+				break;
+		}
 
-		if ( ! current_user_can( $parent_post_type_object->cap->edit_others_posts ) ) {
+		if ( ! current_user_can( $cap, $parent->ID ) ) {
 			return new \WP_Error(
 				'rest_cannot_read',
 				__( 'Sorry, you are not allowed to view or create internal notes on this post.', 'wporg-internal-notes' ),

@@ -34,6 +34,7 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_editor_asse
  * @return void
  */
 function load() {
+	require_once PLUGIN_DIR . 'includes/capabilities.php';
 	require_once PLUGIN_DIR . 'includes/class-rest-controller.php';
 	require_once PLUGIN_DIR . 'includes/post-meta.php';
 }
@@ -61,10 +62,14 @@ function initialize_rest_endpoints() {
  * @return void
  */
 function enqueue_editor_assets() {
-	global $typenow;
+	global $post, $typenow;
 
 	$supported_types = get_post_types_by_support( SLUG );
 	if ( ! in_array( $typenow, $supported_types ) ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'read-internal-notes', $post->ID ) ) {
 		return;
 	}
 
