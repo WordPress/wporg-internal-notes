@@ -25,13 +25,13 @@ function map_meta_caps( $required_caps, $current_cap, $user_id, $args ) {
 		case 'create-internal-note':
 			$required_caps = array();
 
-			$post = get_post( $args[0] );
-			if ( ! $post ) {
+			$parent = get_post( $args[0] );
+			if ( ! $parent ) {
 				$required_caps[] = 'do_not_allow';
 				break;
 			}
 
-			$post_type = get_post_type_object( get_post_type( $post ) );
+			$post_type = get_post_type_object( get_post_type( $parent ) );
 			if ( ! $post_type ) {
 				$required_caps[] = 'do_not_allow';
 				break;
@@ -41,6 +41,31 @@ function map_meta_caps( $required_caps, $current_cap, $user_id, $args ) {
 				$required_caps[] = 'do_not_allow';
 				break;
 			}
+
+			$required_caps[] = $post_type->cap->edit_others_posts;
+			break;
+		case 'delete-internal-note':
+			$required_caps = array();
+
+			$note = get_post( $args[0] );
+			if ( ! $note ) {
+				$required_caps[] = 'do_not_allow';
+				break;
+			}
+
+			$parent = get_post( $note->post_parent );
+			if ( ! $parent ) {
+				$required_caps[] = 'do_not_allow';
+				break;
+			}
+
+			$post_type = get_post_type_object( get_post_type( $parent ) );
+			if ( ! $post_type ) {
+				$required_caps[] = 'do_not_allow';
+				break;
+			}
+
+			// TODO maybe only allow deleting your own notes?
 
 			$required_caps[] = $post_type->cap->edit_others_posts;
 			break;

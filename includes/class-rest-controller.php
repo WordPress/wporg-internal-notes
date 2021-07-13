@@ -81,6 +81,30 @@ class REST_Controller extends \WP_REST_Controller {
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->parent_base . '/(?P<parent>[\d]+)/' . $this->rest_base . '/(?P<id>[\d]+)',
+			array(
+				'args'   => array(
+					'parent' => array(
+						'description' => __( 'The ID for the parent of the object.', 'wporg-internal-notes' ),
+						'type'        => 'integer',
+					),
+					'id'     => array(
+						'description' => __( 'The ID for the note object.', 'wporg-internal-notes' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -101,19 +125,26 @@ class REST_Controller extends \WP_REST_Controller {
 		switch ( $request->get_method() ) {
 			case \WP_REST_Server::READABLE:
 				$cap = 'read-internal-notes';
+				$arg = $parent->ID;
 				break;
 			case \WP_REST_Server::CREATABLE:
 				$cap = 'create-internal-note';
+				$arg = $parent->ID;
+				break;
+			case \WP_REST_Server::DELETABLE:
+				$cap = 'delete-internal-note';
+				$arg = $request['id'];
 				break;
 			default:
 				$cap = 'do_not_allow';
+				$arg = null;
 				break;
 		}
 
-		if ( ! current_user_can( $cap, $parent->ID ) ) {
+		if ( ! current_user_can( $cap, $arg ) ) {
 			return new \WP_Error(
-				'rest_cannot_read',
-				__( 'Sorry, you are not allowed to view or create internal notes on this post.', 'wporg-internal-notes' ),
+				'rest_cannot_access',
+				__( 'Sorry, you are not allowed to access internal notes on this post.', 'wporg-internal-notes' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -136,17 +167,19 @@ class REST_Controller extends \WP_REST_Controller {
 
 		$args = array();
 
-		$collection_params = array_keys( $this->get_collection_params() );
-		foreach ( $collection_params as $param ) {
-			if ( isset( $request[ $param ] ) ) {
-				$args[ $param ] = $request[ $param ];
+		$collection_params = array(
+			'order'    => 'order',
+			'page'     => 'paged',
+			'per_page' => 'posts_per_page',
+		);
+		foreach ( $collection_params as $request_param => $query_param ) {
+			if ( isset( $request[ $request_param ] ) ) {
+				$args[ $query_param ] = $request[ $request_param ];
 			}
 		}
 
-		$total_notes = get_notes( $parent->ID, array( 'count_only' => true ) );
-		$max_pages   = ceil( $total_notes / $args['per_page'] );
-
-		$notes = get_notes( $parent->ID, $args );
+		$notes_query = get_notes( $parent->ID, $args, true );
+		$notes       = $notes_query->get_posts();
 
 		$response = array();
 		foreach ( $notes as $note ) {
@@ -156,8 +189,8 @@ class REST_Controller extends \WP_REST_Controller {
 
 		$response = rest_ensure_response( $response );
 
-		$response->header( 'X-WP-Total', (int) $total_notes );
-		$response->header( 'X-WP-TotalPages', (int) $max_pages );
+		$response->header( 'X-WP-Total', $notes_query->found_posts );
+		$response->header( 'X-WP-TotalPages', $notes_query->max_num_pages );
 
 		return $response;
 	}
@@ -181,17 +214,16 @@ class REST_Controller extends \WP_REST_Controller {
 			return $prepared_note;
 		}
 
-		$meta_id = add_note( $parent->ID, $prepared_note );
-		if ( false === $meta_id ) {
-			return new \WP_Error(
-				'rest_create_item_failed',
-				__( 'Could not create note.', 'wporg-internal-notes' ),
-				array( 'status' => 500 )
-			);
+		$note_id = create_note( $parent->ID, (array) $prepared_note );
+		if ( is_wp_error( $note_id ) ) {
+			return $note_id;
 		}
 
-		$meta     = get_metadata_by_mid( 'post', $meta_id );
-		$note     = maybe_unserialize( $meta->meta_value );
+		$note = $this->get_note( $note_id );
+		if ( is_wp_error( $note ) ) {
+			return $note;
+		}
+
 		$note     = $this->prepare_item_for_response( $note, $request );
 		$response = rest_ensure_response( $note );
 
@@ -201,32 +233,65 @@ class REST_Controller extends \WP_REST_Controller {
 	}
 
 	/**
+	 * Deletes one item from the collection.
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function delete_item( $request ) {
+		$note = $this->get_note( $request['id'] );
+		if ( is_wp_error( $note ) ) {
+			return $note;
+		}
+
+		$previous = $this->prepare_item_for_response( $note, $request );
+
+		$result = delete_note( $note->ID );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		$response = new \WP_REST_Response();
+		$response->set_data(
+			array(
+				'deleted'  => true,
+				'previous' => $previous->get_data(),
+			)
+		);
+
+		return $response;
+	}
+
+	/**
 	 * Prepares one item for create or update operation.
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @return array|\WP_Error The prepared item, or WP_Error object on failure.
+	 * @return \stdClass|\WP_Error Post object or WP_Error.
 	 */
 	protected function prepare_item_for_database( $request ) {
-		$message = false;
-		if ( isset( $request['message'] ) && is_string( $request['message'] ) ) {
-			$message = sanitize_textarea_field( $request['message'] );
-		} elseif ( isset( $request['message']['raw'] ) && is_string( $request['message']['raw'] ) ) {
-			$message = sanitize_textarea_field( $request['message']['raw'] );
+		$prepared_note = new \stdClass();
+
+		$excerpt = false;
+		if ( isset( $request['excerpt'] ) && is_string( $request['excerpt'] ) ) {
+			$excerpt = sanitize_textarea_field( $request['excerpt'] );
+		} elseif ( isset( $request['excerpt']['raw'] ) && is_string( $request['excerpt']['raw'] ) ) {
+			$excerpt = sanitize_textarea_field( $request['excerpt']['raw'] );
 		}
 
-		if ( ! $message ) {
+		if ( ! $excerpt ) {
 			return new \WP_Error(
 				'rest_missing_param',
-				__( 'The message parameter must contain a valid string.', 'wporg-internal-notes' ),
+				__( 'The post_excerpt parameter must contain a valid string.', 'wporg-internal-notes' ),
 				array( 'status' => 400 )
 			);
 		}
 
-		$schema   = $this->get_item_schema();
-		$valid = rest_validate_string_value_from_schema(
-			$message,
-			$schema['properties']['message']['properties']['raw'],
+		$schema = $this->get_item_schema();
+		$valid  = rest_validate_string_value_from_schema(
+			$excerpt,
+			$schema['properties']['excerpt']['properties']['raw'],
 			'message'
 		);
 
@@ -234,11 +299,8 @@ class REST_Controller extends \WP_REST_Controller {
 			return $valid;
 		}
 
-		$prepared_note = array(
-			'author'    => get_current_user_id(),
-			'timestamp' => time(),
-			'message'   => $message,
-		);
+		$prepared_note->post_author  = get_current_user_id();
+		$prepared_note->post_excerpt = $excerpt;
 
 		return $prepared_note;
 	}
@@ -246,40 +308,66 @@ class REST_Controller extends \WP_REST_Controller {
 	/**
 	 * Prepares the item for the REST response.
 	 *
-	 * @param mixed           $item    WordPress representation of the item.
+	 * @param \WP_Post         $note    WordPress representation of the item.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response|\WP_Error Response object on success, or WP_Error object on failure.
 	 */
-	public function prepare_item_for_response( $item, $request ) {
-		$date_format = get_option( 'date_format' );
-		$time_format = get_option( 'time_format' );
+	public function prepare_item_for_response( $note, $request ) {
+		setup_postdata( $note );
 
-		$timestamp         = array(
-			'raw'      => absint( $item['timestamp'] ),
-			'rendered' => wp_date( "$date_format $time_format", $item['timestamp'] ),
-		);
-		$item['timestamp'] = $timestamp;
+		// Base fields for every post.
+		$data = array();
 
-		$message         = array(
-			'raw'      => $item['message'],
-			'rendered' => wpautop( $item['message'] ),
+		$data['date']     = $this->prepare_date_response( $note->post_date_gmt, $note->post_date );
+		$data['date_gmt'] = $this->prepare_date_response( $note->post_date_gmt );
+
+		$data['excerpt'] = array(
+			'raw'       => $note->post_excerpt,
+			'rendered'  => wpautop( $note->post_excerpt ),
 		);
-		$item['message'] = $message;
+
+		$data['id']     = (int) $note->ID;
+		$data['author'] = (int) $note->post_author;
+		$data['parent'] = (int) $note->post_parent;
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$item     = $this->filter_response_by_context( $item, $context );
-		$response = rest_ensure_response( $item );
+		$data     = $this->filter_response_by_context( $data, $context );
+		$response = rest_ensure_response( $data );
 
 		$response->add_link(
 			'author',
-			rest_url( sprintf( '%s/%s/%d', $this->namespace, 'users', $item['author'] ) ),
+			rest_url( sprintf( '%s/%s/%d', $this->namespace, 'users', $data['author'] ) ),
 			array(
 				'embeddable' => true,
 			)
 		);
 
 		return $response;
+	}
+
+	/**
+	 * Checks the post_date_gmt or modified_gmt and prepare any post or
+	 * modified date for single post output.
+	 *
+	 * @param string      $date_gmt GMT publication time.
+	 * @param string|null $date     Optional. Local publication time. Default null.
+	 *
+	 * @return string|null ISO8601/RFC3339 formatted datetime.
+	 */
+	protected function prepare_date_response( $date_gmt, $date = null ) {
+		// Use the date if passed.
+		if ( isset( $date ) ) {
+			return mysql_to_rfc3339( $date );
+		}
+
+		// Return null if $date_gmt is empty/zeros.
+		if ( '0000-00-00 00:00:00' === $date_gmt ) {
+			return null;
+		}
+
+		// Return the formatted datetime.
+		return mysql_to_rfc3339( $date_gmt );
 	}
 
 	/**
@@ -297,50 +385,55 @@ class REST_Controller extends \WP_REST_Controller {
 			'title'      => "{$this->parent_post_type}-{$this->rest_base}",
 			'type'       => 'object',
 			'properties' => array(
-				'author'       => array(
-					'description' => __( 'The ID for the author of the note.', 'wporg-internal-notes' ),
+				'date'     => array(
+					'description' => __( "The date the post was published, in the site's timezone." ),
+					'type'        => array( 'string', 'null' ),
+					'format'      => 'date-time',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'date_gmt' => array(
+					'description' => __( 'The date the post was published, as GMT.' ),
+					'type'        => array( 'string', 'null' ),
+					'format'      => 'date-time',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'id'       => array(
+					'description' => __( 'Unique identifier for the post.' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'timestamp' => array(
-					'description' => __( 'The creation date of the note.', 'wporg-internal-notes' ),
-					'type'        => 'object',
+				'parent'   => array(
+					'description' => __( 'The ID for the parent of the post.' ),
+					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
-					'properties'  => array(
-						'raw' => array(
-							'description' => __( 'The creation date of the note, stored as a Unix timestamp.', 'wporg-internal-notes' ),
-							'type'        => 'integer',
-							'context'     => array( 'edit' ),
-						),
-						'rendered' => array(
-							'description' => __( 'The creation date of the note, formatted as a date string.', 'wporg-internal-notes' ),
-							'type'        => 'string',
-							'format'      => 'date-time',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
 				),
-				'message'   => array(
-					'description' => __( 'The content of the note.', 'wporg-internal-notes' ),
+				'author'   => array(
+					'description' => __( 'The ID for the author of the post.' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'excerpt'  => array(
+					'description' => __( 'The excerpt for the post.' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
 					'arg_options' => array(
-						// This allows for submitting the message param as a string when creating a new note.
 						'sanitize_callback' => null, // Note: sanitization implemented in self::prepare_item_for_database().
 						'validate_callback' => null, // Note: validation implemented in self::prepare_item_for_database().
 					),
 					'properties'  => array(
-						'raw' => array(
-							'description' => __( 'The content of the note, as stored in the database.', 'wporg-internal-notes' ),
+						'raw'      => array(
+							'description' => __( 'Excerpt for the post, as it exists in the database.' ),
 							'type'        => 'string',
 							'context'     => array( 'edit' ),
-							'maxLength'   => 2000,
+							'maxLength'   => 1000,
 						),
 						'rendered' => array(
-							'description' => __( 'The content of the note, as rendered for display.', 'wporg-internal-notes' ),
+							'description' => __( 'HTML excerpt for the post, transformed for display.' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
@@ -398,5 +491,31 @@ class REST_Controller extends \WP_REST_Controller {
 		}
 
 		return $parent;
+	}
+
+	/**
+	 * Get the note post, if the ID is valid.
+	 *
+	 * @param int $note_id Supplied ID.
+	 *
+	 * @return \WP_Post|\WP_Error Post object if ID is valid, WP_Error otherwise.
+	 */
+	protected function get_note( $note_id ) {
+		$error = new \WP_Error(
+			'rest_post_invalid_id',
+			__( 'Invalid post ID.' ),
+			array( 'status' => 404 )
+		);
+
+		if ( (int) $note_id <= 0 ) {
+			return $error;
+		}
+
+		$post = get_post( (int) $note_id );
+		if ( empty( $post ) || empty( $post->ID ) || POST_TYPE !== $post->post_type ) {
+			return $error;
+		}
+
+		return $post;
 	}
 }
