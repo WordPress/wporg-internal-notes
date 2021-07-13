@@ -2,7 +2,6 @@
  * WordPress dependencies.
  */
 import { apiFetch } from '@wordpress/data-controls';
-import { addQueryArgs } from '@wordpress/url';
 
 /**
  * Internal dependencies.
@@ -23,7 +22,7 @@ export function* createNote( noteData ) {
 	};
 
 	const result = yield apiFetch( {
-		path: addQueryArgs( getApiPath(), queryArgs ),
+		path: getApiPath( queryArgs ),
 		method: 'POST',
 		data: noteData,
 	} );
