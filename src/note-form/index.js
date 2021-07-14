@@ -14,7 +14,7 @@ import './index.scss';
 
 export const NoteForm = () => {
 	const [ isAdding, setIsAdding ] = useState( false );
-	const [ message, setMessage ] = useState( '' );
+	const [ note, setNote ] = useState( '' );
 	const { clearNew, createNote } = useDispatch( noteStore );
 
 	return (
@@ -23,8 +23,8 @@ export const NoteForm = () => {
 				<>
 					<TextareaControl
 						label={ __( 'Add a note', 'wporg-internal-notes' ) }
-						value={ message }
-						onChange={ newValue => setMessage( newValue ) }
+						value={ note }
+						onChange={ newValue => setNote( newValue ) }
 						rows="2"
 					/>
 					<div className="note-form__buttons">
@@ -43,9 +43,9 @@ export const NoteForm = () => {
 							onClick={ ( event ) => {
 								event.preventDefault();
 								createNote( {
-									message: message,
+									excerpt: note,
 								} );
-								setMessage( '' );
+								setNote( '' );
 								setTimeout( () => {
 									clearNew();
 								}, 100 );

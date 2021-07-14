@@ -322,6 +322,11 @@ class REST_Controller extends \WP_REST_Controller {
 		$data['date']     = $this->prepare_date_response( $note->post_date_gmt, $note->post_date );
 		$data['date_gmt'] = $this->prepare_date_response( $note->post_date_gmt );
 
+		$data['date_relative'] = sprintf(
+			'%s ago',
+			human_time_diff( strtotime( $note->post_date_gmt ), time() )
+		);
+
 		$data['excerpt'] = array(
 			'raw'       => $note->post_excerpt,
 			'rendered'  => wpautop( $note->post_excerpt ),
@@ -385,39 +390,46 @@ class REST_Controller extends \WP_REST_Controller {
 			'title'      => "{$this->parent_post_type}-{$this->rest_base}",
 			'type'       => 'object',
 			'properties' => array(
-				'date'     => array(
-					'description' => __( "The date the post was published, in the site's timezone." ),
+				'date'          => array(
+					'description' => __( "The date the note was added, in the site's timezone." ),
 					'type'        => array( 'string', 'null' ),
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'date_gmt' => array(
-					'description' => __( 'The date the post was published, as GMT.' ),
+				'date_gmt'      => array(
+					'description' => __( 'The date the note was added, as GMT.' ),
 					'type'        => array( 'string', 'null' ),
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'id'       => array(
+				'date_relative' => array(
+					'description' => __( "The date the note was added, as a human-readable relative string." ),
+					'type'        => array( 'string' ),
+					'format'      => 'date-time',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'id'            => array(
 					'description' => __( 'Unique identifier for the post.' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'parent'   => array(
+				'parent'        => array(
 					'description' => __( 'The ID for the parent of the post.' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'author'   => array(
+				'author'        => array(
 					'description' => __( 'The ID for the author of the post.' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'excerpt'  => array(
+				'excerpt'       => array(
 					'description' => __( 'The excerpt for the post.' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),

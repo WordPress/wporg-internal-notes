@@ -29,7 +29,7 @@ export const NotesList = () => {
 		<ul className="notes-list">
 			{ notes.map( ( note, index ) =>
 				<NotesListItem
-					key={ `${ index }-${ note.timestamp.raw }` }
+					key={ note.id }
 					className={ ( 0 === index && hasNewNote ) ? 'note-new' : '' }
 					note={ note }
 				/>
