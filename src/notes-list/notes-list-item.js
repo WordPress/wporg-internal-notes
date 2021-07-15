@@ -24,7 +24,7 @@ const DeleteButton = ( { noteId } ) => {
 
 	useEffect( () => {
 		const handleClickOutside = ( event ) => {
-			if ( confirmRef.current && ! event.target.contains( confirmRef.current ) ) {
+			if ( confirmRef.current && ! confirmRef.current.contains( event.target ) ) {
 				setConfirm( false );
 			}
 		};
