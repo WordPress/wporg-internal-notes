@@ -8,14 +8,34 @@
 	&:last-of-type {
 		border-bottom: 0;
 	}
+
+	.components-button {
+		height: auto;
+		width: auto;
+	}
 }
 
 .note-new {
 	background-color: #cceebb;
 }
 
+.note-remove {
+	background-color: #faafaa;
+}
+
+.note__button-delete {
+	opacity: 0;
+	transition: opacity 300ms ease-in-out;
+
+	.note:hover & {
+		opacity: 100;
+	}
+}
+
 .note-header {
 	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
 }
 
 .note-author {
@@ -30,9 +50,11 @@
 
 .note-author__name {
 	font-weight: 700;
+	word-break: break-word;
 }
 
 .note-date {
+	display: block;
 	margin: 0.5rem 0;
 	font-style: italic;
 }

@@ -11,17 +11,18 @@ import { NotesListItem } from "./notes-list-item";
 import './index.scss'
 
 export const NotesList = () => {
-	const { notes, hasNewNote } = useSelect( ( select ) => {
+	const { notes, hasNewNote, removingNote } = useSelect( ( select ) => {
 		const notesQueryArgs = {
 			_embed: true,
 			context: 'edit',
 			per_page: 100,
 		};
-		const { getNotes, hasNewNote } = select( notesStore );
+		const { getNotes, hasNewNote, isRemovingNote } = select( notesStore );
 
 		return {
 			notes: getNotes( notesQueryArgs ),
 			hasNewNote: hasNewNote(),
+			removingNote: isRemovingNote(),
 		};
 	} );
 
@@ -30,7 +31,10 @@ export const NotesList = () => {
 			{ notes.map( ( note, index ) =>
 				<NotesListItem
 					key={ note.id }
-					className={ ( 0 === index && hasNewNote ) ? 'note-new' : '' }
+					className={{
+						'note-new': 0 === index && hasNewNote,
+						'note-remove': note.id === removingNote
+					} }
 					note={ note }
 				/>
 			) }

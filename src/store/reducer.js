@@ -3,7 +3,7 @@
  */
 import { TYPES } from './action-types';
 
-const { CLEAR_NEW, CREATE_NOTE, FETCH_NOTES } = TYPES;
+const { CLEAR_NEW, CREATE_NOTE, DELETE_NOTE, FETCH_NOTES, SET_REMOVING } = TYPES;
 
 const DEFAULT_STATE = {
 	notes: [],
@@ -12,7 +12,7 @@ const DEFAULT_STATE = {
 
 export const reducer = (
 	state = DEFAULT_STATE,
-	{ note, notes, type }
+	{ note, notes, noteId, type }
 ) => {
 	switch ( type ) {
 		case CLEAR_NEW:
@@ -26,11 +26,22 @@ export const reducer = (
 				notes: [ note, ...state.notes ],
 				hasNewNote: true,
 			};
+		case DELETE_NOTE:
+			return {
+				...state,
+				notes: [ ...state.notes ].filter( item => item.id !== noteId ),
+				removingNote: false,
+			}
 		case FETCH_NOTES:
 			return {
 				...state,
 				notes,
 			};
+		case SET_REMOVING:
+			return {
+				...state,
+				removingNote: noteId,
+			}
 		default:
 			return state;
 	}

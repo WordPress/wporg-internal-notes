@@ -9,7 +9,7 @@ import { apiFetch } from '@wordpress/data-controls';
 import { TYPES } from './action-types';
 import { getApiPath } from "./utils";
 
-const { CLEAR_NEW, CREATE_NOTE, FETCH_NOTES } = TYPES;
+const { CLEAR_NEW, CREATE_NOTE, DELETE_NOTE, FETCH_NOTES, SET_REMOVING } = TYPES;
 
 export const clearNew = () => {
 	return { type: CLEAR_NEW };
@@ -22,7 +22,7 @@ export function* createNote( noteData ) {
 	};
 
 	const result = yield apiFetch( {
-		path: getApiPath( queryArgs ),
+		path: getApiPath( { queryArgs } ),
 		method: 'POST',
 		data: noteData,
 	} );
@@ -35,9 +35,30 @@ export function* createNote( noteData ) {
 	}
 }
 
+export function* deleteNote( noteId ) {
+	const result = yield apiFetch( {
+		path: getApiPath( { noteId } ),
+		method: 'DELETE',
+	} );
+
+	if ( result ) {
+		return {
+			type: DELETE_NOTE,
+			noteId: noteId,
+		}
+	}
+}
+
 export const fetchNotes = notes => {
 	return {
 		type: FETCH_NOTES,
 		notes
+	};
+};
+
+export const setRemoving = ( noteId ) => {
+	return {
+		type: SET_REMOVING,
+		noteId: noteId,
 	};
 };

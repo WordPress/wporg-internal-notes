@@ -9,8 +9,8 @@ import { apiFetch } from '@wordpress/data-controls';
 import { fetchNotes } from "./actions";
 import { getApiPath } from "./utils";
 
-export function* getNotes( args ) {
-	const path = getApiPath( args );
+export function* getNotes( queryArgs ) {
+	const path = getApiPath( { queryArgs } );
 
 	const results = yield apiFetch( { path } );
 
