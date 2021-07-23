@@ -47,7 +47,7 @@ export const NoteForm = () => {
 									setNote( '' );
 									setTimeout( () => {
 										clearIsCreated( note.id );
-									}, 100 );
+									}, 500 );
 								} );
 							} }
 							isPrimary

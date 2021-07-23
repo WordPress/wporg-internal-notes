@@ -3,7 +3,10 @@
 	border-bottom: 1px solid #e0e0e0;
 	margin: 0;
 	padding: 16px 16px 8px;
-	transition: opacity 900ms ease-out;
+
+	> * {
+		transition: opacity 500ms ease-out;
+	}
 
 	&:last-of-type {
 		border-bottom: 0;
@@ -17,7 +20,9 @@
 
 .note-created,
 .note-deleted {
-	opacity: 0;
+	> * {
+		opacity: 0;
+	}
 }
 
 .note__button-delete {
