@@ -3,11 +3,12 @@
  */
 import { TYPES } from './action-types';
 
-const { CLEAR_NEW, CREATE_NOTE, DELETE_NOTE, FETCH_NOTES, SET_REMOVING } = TYPES;
+const { CREATE_NOTE, DELETE_NOTE, FETCH_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
 
 const DEFAULT_STATE = {
 	notes: [],
-	hasNewNote: false,
+	isCreated: [],
+	isDeleted: [],
 };
 
 export const reducer = (
@@ -15,33 +16,33 @@ export const reducer = (
 	{ note, notes, noteId, type }
 ) => {
 	switch ( type ) {
-		case CLEAR_NEW:
-			return {
-				...state,
-				hasNewNote: false,
-			};
 		case CREATE_NOTE:
 			return {
 				...state,
 				notes: [ note, ...state.notes ],
-				hasNewNote: true,
+				isCreated: [ ...state.isCreated, note.id ],
+			};
+		case CLEAR_IS_CREATED:
+			return {
+				...state,
+				isCreated: [ ...state.isCreated ].filter( id => id !== noteId ),
 			};
 		case DELETE_NOTE:
 			return {
 				...state,
 				notes: [ ...state.notes ].filter( item => item.id !== noteId ),
-				removingNote: false,
+				isDeleted: [ ...state.isDeleted ].filter( id => id !== noteId ),
 			}
+		case SET_IS_DELETED:
+			return {
+				...state,
+				isDeleted: [ ...state.isDeleted, noteId ],
+			};
 		case FETCH_NOTES:
 			return {
 				...state,
 				notes,
 			};
-		case SET_REMOVING:
-			return {
-				...state,
-				removingNote: noteId,
-			}
 		default:
 			return state;
 	}

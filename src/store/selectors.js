@@ -3,10 +3,10 @@ export function getNotes( state ) {
 	return state.notes || [];
 }
 
-export function hasNewNote( state ) {
-	return state.hasNewNote;
+export function isCreated( state, noteId ) {
+	return state.isCreated.includes( noteId );
 }
 
-export function isRemovingNote( state ) {
-	return state.removingNote;
+export function isDeleted( state, noteId ) {
+	return state.isDeleted.includes( noteId );
 }

@@ -13,13 +13,13 @@ import { store as noteStore } from '../store/';
 import './index.scss';
 
 export const NoteForm = () => {
-	const [ isAdding, setIsAdding ] = useState( false );
+	const [ isOpen, setIsOpen ] = useState( false );
 	const [ note, setNote ] = useState( '' );
-	const { clearNew, createNote } = useDispatch( noteStore );
+	const { clearIsCreated, createNote } = useDispatch( noteStore );
 
 	return (
 		<PanelBody className="note-form">
-			{ isAdding &&
+			{ isOpen &&
 				<>
 					<TextareaControl
 						label={ __( 'Add a note', 'wporg-internal-notes' ) }
@@ -33,36 +33,33 @@ export const NoteForm = () => {
 							text={ __( 'Cancel', 'wporg-internal-notes' ) }
 							onClick={ ( event ) => {
 								event.preventDefault();
-								setIsAdding( false );
+								setIsOpen( false );
 							} }
 							isSecondary
 						/>
 						<Button
 							className="note-form__button-submit"
 							text={ __( 'Submit', 'wporg-internal-notes' ) }
-							onClick={ ( event ) => {
-								event.preventDefault();
+							onClick={ () => {
 								createNote( {
 									excerpt: note,
+								} ).then( ( { note } ) => {
+									setNote( '' );
+									setTimeout( () => {
+										clearIsCreated( note.id );
+									}, 100 );
 								} );
-								setNote( '' );
-								setTimeout( () => {
-									clearNew();
-								}, 100 );
 							} }
 							isPrimary
 						/>
 					</div>
 				</>
 			}
-			{ ! isAdding &&
+			{ ! isOpen &&
 				<Button
 					className="note-form__toggle"
 					text={ __( 'Add a note', 'wporg-internal-notes' ) }
-					onClick={ ( event ) => {
-						event.preventDefault();
-						setIsAdding( true );
-					} }
+					onClick={ () => { setIsOpen( true ); } }
 					isPrimary
 				/>
 			}

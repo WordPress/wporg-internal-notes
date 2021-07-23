@@ -7,19 +7,19 @@ import classnames from 'classnames';
  * WordPress dependencies.
  */
 import { Button } from '@wordpress/components';
-import { useDispatch } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { RawHTML, useEffect, useRef, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies.
  */
-import { store as noteStore } from '../store/';
+import { store as notesStore } from '../store/';
 import './notes-list-item.scss'
 
 const DeleteButton = ( { noteId } ) => {
 	const [ confirm, setConfirm ] = useState( false );
-	const { deleteNote, setRemoving } = useDispatch( noteStore );
+	const { deleteNote, setIsDeleted } = useDispatch( notesStore );
 	const confirmRef = useRef();
 
 	useEffect( () => {
@@ -52,9 +52,8 @@ const DeleteButton = ( { noteId } ) => {
 					ref={ confirmRef }
 					className="note__button-confirm-delete"
 					isDestructive
-					onClick={ ( event ) => {
-						event.preventDefault();
-						setRemoving( noteId );
+					onClick={ () => {
+						setIsDeleted( noteId );
 						setTimeout( () => {
 							deleteNote( noteId );
 						}, 500 );
@@ -71,6 +70,14 @@ export const NotesListItem = ( { className, note } ) => {
 	const { id: noteId, date_gmt: dateIso, date_relative: dateRelative } = note;
 	const author = note?._embedded?.author?.[0];
 	const excerpt = note?.excerpt?.rendered;
+	const { isCreated, isDeleted } = useSelect( ( select ) => {
+		const { isCreated, isDeleted } = select( notesStore );
+
+		return {
+			isCreated: isCreated( note.id ),
+			isDeleted: isDeleted( note.id ),
+		};
+	}, [ note ] );
 
 	if ( ! author || ! dateRelative || ! excerpt ) {
 		return(
@@ -82,9 +89,17 @@ export const NotesListItem = ( { className, note } ) => {
 
 	const avatarUrl = author.avatar_urls['24'];
 	const { slug } = author;
+	const classes = classnames(
+		'note',
+		{
+			'note-created': isCreated,
+			'note-deleted': isDeleted,
+		},
+		className
+	);
 
 	return (
-		<li className={ classnames( 'note', className ) }>
+		<li className={ classes }>
 			<header className="note-header">
 				<div>
 					<div className="note-author">
