@@ -67,7 +67,7 @@ export function* setNotes() {
 		totalNotes,
 		notes
 	};
-};
+}
 
 export function* appendNotes( offset ) {
 	const { totalNotes, notes } = yield fetchNotes( offset );
