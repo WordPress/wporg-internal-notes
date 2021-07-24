@@ -3,9 +3,10 @@
  */
 import { TYPES } from './action-types';
 
-const { CREATE_NOTE, DELETE_NOTE, FETCH_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
+const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
 
 const DEFAULT_STATE = {
+	totalNotes: 0,
 	notes: [],
 	isCreated: [],
 	isDeleted: [],
@@ -13,12 +14,13 @@ const DEFAULT_STATE = {
 
 export const reducer = (
 	state = DEFAULT_STATE,
-	{ note, notes, noteId, type }
+	{ note, notes, noteId, totalNotes, type }
 ) => {
 	switch ( type ) {
 		case CREATE_NOTE:
 			return {
 				...state,
+				totalNotes: state.totalNotes ++,
 				notes: [ note, ...state.notes ],
 				isCreated: [ ...state.isCreated, note.id ],
 			};
@@ -30,6 +32,7 @@ export const reducer = (
 		case DELETE_NOTE:
 			return {
 				...state,
+				totalNotes: state.totalNotes --,
 				notes: [ ...state.notes ].filter( item => item.id !== noteId ),
 				isDeleted: [ ...state.isDeleted ].filter( id => id !== noteId ),
 			}
@@ -38,10 +41,17 @@ export const reducer = (
 				...state,
 				isDeleted: [ ...state.isDeleted, noteId ],
 			};
-		case FETCH_NOTES:
+		case SET_NOTES:
 			return {
 				...state,
+				totalNotes,
 				notes,
+			};
+		case APPEND_NOTES:
+			return {
+				...state,
+				totalNotes,
+				notes: [ ...state.notes, ...notes ],
 			};
 		default:
 			return state;

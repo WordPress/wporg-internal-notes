@@ -1,20 +1,8 @@
 /**
- * WordPress dependencies.
- */
-import { apiFetch } from '@wordpress/data-controls';
-
-/**
  * Internal dependencies.
  */
-import { fetchNotes } from "./actions";
-import { getApiPath } from "./utils";
+import { setNotes } from "./actions";
 
-export function* getNotes( queryArgs ) {
-	const path = getApiPath( { queryArgs } );
-
-	const results = yield apiFetch( { path } );
-
-	if ( results ) {
-		return fetchNotes( results );
-	}
+export function* getNotes() {
+	yield setNotes();
 }

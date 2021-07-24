@@ -7,9 +7,9 @@ import { apiFetch } from '@wordpress/data-controls';
  * Internal dependencies.
  */
 import { TYPES } from './action-types';
-import { getApiPath } from "./utils";
+import { getApiPath, fetchNotes } from "./utils";
 
-const { CREATE_NOTE, DELETE_NOTE, FETCH_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
+const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
 
 export function* createNote( noteData ) {
 	const queryArgs = {
@@ -59,9 +59,22 @@ export const setIsDeleted = ( noteId ) => {
 	};
 };
 
-export const fetchNotes = notes => {
+export function* setNotes() {
+	const { totalNotes, notes } = yield fetchNotes();
+
 	return {
-		type: FETCH_NOTES,
+		type: SET_NOTES,
+		totalNotes,
 		notes
 	};
 };
+
+export function* appendNotes( offset ) {
+	const { totalNotes, notes } = yield fetchNotes( offset );
+
+	return {
+		type: APPEND_NOTES,
+		totalNotes,
+		notes
+	};
+}

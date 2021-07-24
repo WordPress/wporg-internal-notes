@@ -9,13 +9,13 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import { store as noteStore } from '../store/';
+import { store as notesStore } from '../store/';
 import './index.scss';
 
 export const NoteForm = () => {
 	const [ isOpen, setIsOpen ] = useState( false );
 	const [ note, setNote ] = useState( '' );
-	const { clearIsCreated, createNote } = useDispatch( noteStore );
+	const { clearIsCreated, createNote } = useDispatch( notesStore );
 
 	return (
 		<PanelBody className="note-form">

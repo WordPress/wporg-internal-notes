@@ -25,11 +25,11 @@ const STORE_NAME = 'wporg/internal-notes';
  * @type {Object}
  */
 export const store = createReduxStore( STORE_NAME, {
-	reducer,
-	selectors,
 	actions,
 	controls,
+	selectors,
 	resolvers,
+	reducer,
 } );
 
 register( store );

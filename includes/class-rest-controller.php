@@ -171,6 +171,7 @@ class REST_Controller extends \WP_REST_Controller {
 			'order'    => 'order',
 			'page'     => 'paged',
 			'per_page' => 'posts_per_page',
+			'offset'   => 'offset',
 		);
 		foreach ( $collection_params as $request_param => $query_param ) {
 			if ( isset( $request[ $request_param ] ) ) {
@@ -467,6 +468,11 @@ class REST_Controller extends \WP_REST_Controller {
 	 */
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
+
+		$params['offset'] = array(
+			'description' => __( 'Offset the result set by a specific number of items.', 'wporg-internal-notes' ),
+			'type'        => 'integer',
+		);
 
 		$params['order'] = array(
 			'description' => __( 'Order sort attribute ascending or descending.', 'wporg-internal-notes' ),
