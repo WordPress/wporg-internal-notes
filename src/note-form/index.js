@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies.
  */
-import { Button, PanelBody, TextareaControl } from '@wordpress/components';
+import { Button, PanelBody, Spinner, TextareaControl } from '@wordpress/components';
 import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -14,6 +14,7 @@ import './index.scss';
 
 export const NoteForm = () => {
 	const [ isOpen, setIsOpen ] = useState( false );
+	const [ isLoading, setIsLoading ] = useState( false );
 	const [ note, setNote ] = useState( '' );
 	const { clearIsCreated, createNote } = useDispatch( notesStore );
 
@@ -26,32 +27,42 @@ export const NoteForm = () => {
 						value={ note }
 						onChange={ newValue => setNote( newValue ) }
 						rows="2"
+						disabled={ isLoading }
 					/>
 					<div className="note-form__buttons">
-						<Button
-							className="note-form__button-cancel"
-							text={ __( 'Cancel', 'wporg-internal-notes' ) }
-							onClick={ ( event ) => {
-								event.preventDefault();
-								setIsOpen( false );
-							} }
-							isSecondary
-						/>
-						<Button
-							className="note-form__button-submit"
-							text={ __( 'Submit', 'wporg-internal-notes' ) }
-							onClick={ () => {
-								createNote( {
-									excerpt: note,
-								} ).then( ( { note } ) => {
-									setNote( '' );
-									setTimeout( () => {
-										clearIsCreated( note.id );
-									}, 500 );
-								} );
-							} }
-							isPrimary
-						/>
+						{ isLoading &&
+							<Spinner />
+						}
+						{ ! isLoading &&
+							<>
+								<Button
+									className="note-form__button-cancel"
+									text={ __( 'Cancel', 'wporg-internal-notes' ) }
+									onClick={ ( event ) => {
+										event.preventDefault();
+										setIsOpen( false );
+									} }
+									isSecondary
+								/>
+								<Button
+									className="note-form__button-submit"
+									text={ __( 'Submit', 'wporg-internal-notes' ) }
+									onClick={ () => {
+										setIsLoading( true );
+										createNote( {
+											excerpt: note,
+										} ).then( ( { note } ) => {
+											setNote( '' );
+											setIsLoading( false );
+											setTimeout( () => {
+												clearIsCreated( note.id );
+											}, 500 );
+										} );
+									} }
+									isPrimary
+								/>
+							</>
+						}
 					</div>
 				</>
 			}
