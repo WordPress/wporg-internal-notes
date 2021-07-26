@@ -10,9 +10,7 @@ import { NotesSidebar } from './sidebar';
 
 const PluginWrapper = () => {
 	return (
-		<>
-			<NotesSidebar />
-		</>
+		<NotesSidebar />
 	);
 };
 

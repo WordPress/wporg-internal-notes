@@ -33,7 +33,7 @@ export const LoadMore = () => {
 						}
 						{ ! isLoading &&
 							<Button
-								className="load-more-button"
+								className="wporg-internal-notes__button-load-more"
 								text={ __( 'Load older notes', 'wporg-internal-notes' ) }
 								isSecondary
 								onClick={ () => {

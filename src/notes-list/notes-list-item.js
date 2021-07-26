@@ -40,7 +40,7 @@ const DeleteButton = ( { noteId } ) => {
 		<>
 			{ ! confirm &&
 				<Button
-					className="note__button-delete"
+					className="wporg-internal-notes__note-button-delete"
 					label={ __( 'Delete note', 'wporg-internal-notes' ) }
 					icon="trash"
 					isSecondary
@@ -50,7 +50,7 @@ const DeleteButton = ( { noteId } ) => {
 			{ confirm &&
 				<Button
 					ref={ confirmRef }
-					className="note__button-confirm-delete"
+					className="wporg-internal-notes__note-button-confirm-delete"
 					isDestructive
 					onClick={ () => {
 						setIsDeleted( noteId );
@@ -81,7 +81,7 @@ export const NotesListItem = ( { className, note } ) => {
 
 	if ( ! author || ! dateRelative || ! excerpt ) {
 		return(
-			<li className={ classnames( 'note note-error', className ) }>
+			<li className={ classnames( 'wporg-internal-notes__note', 'is-error', className ) }>
 				{ __( 'Missing data.', 'wporg-internal-notes' ) }
 			</li>
 		);
@@ -90,33 +90,33 @@ export const NotesListItem = ( { className, note } ) => {
 	const avatarUrl = author.avatar_urls['24'];
 	const { slug } = author;
 	const classes = classnames(
-		'note',
+		'wporg-internal-notes__note',
 		{
-			'note-created': isCreated,
-			'note-deleted': isDeleted,
+			'is-created': isCreated,
+			'is-deleted': isDeleted,
 		},
 		className
 	);
 
 	return (
 		<li className={ classes }>
-			<header className="note-header">
+			<header className="wporg-internal-notes__note-header">
 				<div>
-					<div className="note-author">
-						<img className="note-author__avatar" src={ avatarUrl } alt="" />
-						<span className="note-author__name">
+					<div className="wporg-internal-notes__note-author">
+						<img className="wporg-internal-notes__note-author-avatar" src={ avatarUrl } alt="" />
+						<span className="wporg-internal-notes__note-author-name">
 							<a href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }>
 								{ sprintf( '@%s', slug ) }
 							</a>
 						</span>
 					</div>
-					<time className="note-date" title={ dateIso } dateTime={ dateIso }>
+					<time className="wporg-internal-notes__note-date" title={ dateIso } dateTime={ dateIso }>
 						{ dateRelative }
 					</time>
 				</div>
 				<DeleteButton noteId={ noteId } />
 			</header>
-			<RawHTML className="note-excerpt">
+			<RawHTML className="wporg-internal-notes__note-excerpt">
 				{ excerpt }
 			</RawHTML>
 		</li>

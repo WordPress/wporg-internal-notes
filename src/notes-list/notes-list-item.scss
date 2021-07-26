@@ -1,5 +1,5 @@
 
-.note {
+.wporg-internal-notes__note {
 	border-bottom: 1px solid #e0e0e0;
 	margin: 0;
 	padding: 16px 16px 8px;
@@ -18,44 +18,44 @@
 	}
 }
 
-.note-created,
-.note-deleted {
+.is-created,
+.is-deleted {
 	> * {
 		opacity: 0;
 	}
 }
 
-.note__button-delete {
+.wporg-internal-notes__note-button-delete {
 	opacity: 0;
 	transition: opacity 300ms ease-in-out;
 
-	.note:hover & {
+	.wporg-internal-notes__note:hover & {
 		opacity: 100;
 	}
 }
 
-.note-header {
+.wporg-internal-notes__note-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-start;
 }
 
-.note-author {
+.wporg-internal-notes__note-author {
 	display: flex;
 	align-items: center;
 	margin: 0 0 0.5rem;
 }
 
-.note-author__avatar {
+.wporg-internal-notes__note-author-avatar {
 	margin-right: 0.5rem;
 }
 
-.note-author__name {
+.wporg-internal-notes__note-author-name {
 	font-weight: 700;
 	word-break: break-word;
 }
 
-.note-date {
+.wporg-internal-notes__note-date {
 	display: block;
 	margin: 0.5rem 0;
 	font-style: italic;

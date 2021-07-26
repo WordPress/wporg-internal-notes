@@ -19,24 +19,25 @@ export const NoteForm = () => {
 	const { clearIsCreated, createNote } = useDispatch( notesStore );
 
 	return (
-		<PanelBody className="note-form">
+		<PanelBody className="wporg-internal-notes__note-form">
 			{ isOpen &&
 				<>
 					<TextareaControl
+						className="wporg-internal-notes__note-form-textarea"
 						label={ __( 'Add a note', 'wporg-internal-notes' ) }
 						value={ note }
 						onChange={ newValue => setNote( newValue ) }
 						rows="2"
 						disabled={ isLoading }
 					/>
-					<div className="note-form__buttons">
+					<div className="wporg-internal-notes__note-form-buttons">
 						{ isLoading &&
 							<Spinner />
 						}
 						{ ! isLoading &&
 							<>
 								<Button
-									className="note-form__button-cancel"
+									className="wporg-internal-notes__note-form-button-cancel"
 									text={ __( 'Cancel', 'wporg-internal-notes' ) }
 									onClick={ ( event ) => {
 										event.preventDefault();
@@ -45,7 +46,7 @@ export const NoteForm = () => {
 									isSecondary
 								/>
 								<Button
-									className="note-form__button-submit"
+									className="wporg-internal-notes__note-form-button-submit"
 									text={ __( 'Submit', 'wporg-internal-notes' ) }
 									onClick={ () => {
 										setIsLoading( true );
@@ -68,7 +69,7 @@ export const NoteForm = () => {
 			}
 			{ ! isOpen &&
 				<Button
-					className="note-form__toggle"
+					className="wporg-internal-notes__note-form-button-toggle"
 					text={ __( 'Add a note', 'wporg-internal-notes' ) }
 					onClick={ () => { setIsOpen( true ); } }
 					isPrimary

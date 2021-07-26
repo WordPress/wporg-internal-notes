@@ -19,7 +19,7 @@ const SidebarIcon = () => {
 	const { getTotalNotesCount } = useSelect( select => select( notesStore ) );
 
 	return (
-		<div className="wporg-internal-notes-sidebar__icon">
+		<div className="wporg-internal-notes__sidebar-icon">
 			<span className="note-count">
 				{ getTotalNotesCount().toLocaleString() }
 			</span>
@@ -35,7 +35,8 @@ export const NotesSidebar = () => {
 
 	return (
 		<PluginSidebar
-			name="wporg-internal-notes-sidebar"
+			name="wporg-internal-notes__sidebar"
+			className="wporg-internal-notes__sidebar"
 			title={ __( 'Internal Notes', 'wporg-internal-notes' ) }
 			icon={
 				<SidebarIcon />
