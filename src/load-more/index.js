@@ -1,8 +1,9 @@
 /**
  * WordPress dependencies.
  */
-import { Button, PanelBody } from '@wordpress/components';
+import { Button, PanelBody, Spinner } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -11,6 +12,7 @@ import { __ } from '@wordpress/i18n';
 import { store as notesStore } from "../store";
 
 export const LoadMore = () => {
+	const [ isLoading, setIsLoading ] = useState( false );
 	const counts = useSelect( ( select ) => {
 		const { getCurrentNotesCount, getTotalNotesCount } = select( notesStore );
 
@@ -19,20 +21,36 @@ export const LoadMore = () => {
 			total: getTotalNotesCount(),
 		};
 	} );
-	const { appendNotes } = useDispatch( notesStore );
+	const { appendNotes, clearIsCreated } = useDispatch( notesStore );
 
 	return (
 		<>
 			{ counts.total > counts.current &&
 				<PanelBody className="load-more">
-					<Button
-						className="load-more-button"
-						text={ __( 'Load older notes', 'wporg-internal-notes' ) }
-						isSecondary
-						onClick={ () => {
-							appendNotes( counts.current );
-						} }
-					/>
+					<>
+						{ isLoading &&
+							<Spinner />
+						}
+						{ ! isLoading &&
+							<Button
+								className="load-more-button"
+								text={ __( 'Load older notes', 'wporg-internal-notes' ) }
+								isSecondary
+								onClick={ () => {
+									setIsLoading( true );
+									appendNotes( counts.current )
+										.then( ( { notes } ) => {
+											setTimeout( () => {
+												notes.map( ( note ) => {
+													clearIsCreated( note.id );
+												} );
+												setIsLoading( false );
+											}, 500 );
+										} );
+								} }
+							/>
+						}
+					</>
 				</PanelBody>
 			}
 		</>

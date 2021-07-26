@@ -48,10 +48,13 @@ export const reducer = (
 				notes,
 			};
 		case APPEND_NOTES:
+			const noteIds = notes.map( note => note.id );
+
 			return {
 				...state,
 				totalNotes,
 				notes: [ ...state.notes, ...notes ],
+				isCreated: [ ...state.isCreated, ...noteIds ],
 			};
 		default:
 			return state;
