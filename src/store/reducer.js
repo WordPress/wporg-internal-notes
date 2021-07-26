@@ -20,7 +20,7 @@ export const reducer = (
 		case CREATE_NOTE:
 			return {
 				...state,
-				totalNotes: state.totalNotes ++,
+				totalNotes: state.totalNotes + 1,
 				notes: [ note, ...state.notes ],
 				isCreated: [ ...state.isCreated, note.id ],
 			};
@@ -32,7 +32,7 @@ export const reducer = (
 		case DELETE_NOTE:
 			return {
 				...state,
-				totalNotes: state.totalNotes --,
+				totalNotes: state.totalNotes - 1,
 				notes: [ ...state.notes ].filter( item => item.id !== noteId ),
 				isDeleted: [ ...state.isDeleted ].filter( id => id !== noteId ),
 			}
