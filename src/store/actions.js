@@ -7,7 +7,7 @@ import { apiFetch } from '@wordpress/data-controls';
  * Internal dependencies.
  */
 import { TYPES } from './action-types';
-import { getApiPath, fetchNotes } from "./utils";
+import { fetchNotes, getApiPath } from './utils';
 
 const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
 
@@ -27,14 +27,14 @@ export function* createNote( noteData ) {
 		return {
 			type: CREATE_NOTE,
 			note: result,
-		}
+		};
 	}
 }
 
 export const clearIsCreated = ( noteId ) => {
 	return {
 		type: CLEAR_IS_CREATED,
-		noteId
+		noteId,
 	};
 };
 
@@ -47,15 +47,15 @@ export function* deleteNote( noteId ) {
 	if ( result ) {
 		return {
 			type: DELETE_NOTE,
-			noteId: noteId,
-		}
+			noteId,
+		};
 	}
 }
 
 export const setIsDeleted = ( noteId ) => {
 	return {
 		type: SET_IS_DELETED,
-		noteId
+		noteId,
 	};
 };
 
@@ -65,7 +65,7 @@ export function* setNotes() {
 	return {
 		type: SET_NOTES,
 		totalNotes,
-		notes
+		notes,
 	};
 }
 
@@ -75,6 +75,6 @@ export function* appendNotes( offset ) {
 	return {
 		type: APPEND_NOTES,
 		totalNotes,
-		notes
+		notes,
 	};
 }

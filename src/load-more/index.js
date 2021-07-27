@@ -9,7 +9,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies.
  */
-import { store as notesStore } from "../store";
+import { store as notesStore } from '../store';
 
 export const LoadMore = () => {
 	const [ isLoading, setIsLoading ] = useState( false );
@@ -25,34 +25,31 @@ export const LoadMore = () => {
 
 	return (
 		<>
-			{ counts.total > counts.current &&
+			{ counts.total > counts.current && (
 				<PanelBody className="load-more">
 					<>
-						{ isLoading &&
-							<Spinner />
-						}
-						{ ! isLoading &&
+						{ isLoading && <Spinner /> }
+						{ ! isLoading && (
 							<Button
 								className="wporg-internal-notes__button-load-more"
 								text={ __( 'Load older notes', 'wporg-internal-notes' ) }
 								isSecondary
 								onClick={ () => {
 									setIsLoading( true );
-									appendNotes( counts.current )
-										.then( ( { notes } ) => {
-											setTimeout( () => {
-												notes.map( ( note ) => {
-													clearIsCreated( note.id );
-												} );
-												setIsLoading( false );
-											}, 500 );
-										} );
+									appendNotes( counts.current ).then( ( { notes } ) => {
+										setTimeout( () => {
+											notes.forEach( ( note ) => {
+												clearIsCreated( note.id );
+											} );
+											setIsLoading( false );
+										}, 500 );
+									} );
 								} }
 							/>
-						}
+						) }
 					</>
 				</PanelBody>
-			}
+			) }
 		</>
 	);
-}
+};

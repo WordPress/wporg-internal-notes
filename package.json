@@ -9,20 +9,26 @@
 	"devDependencies": {
 		"@wordpress/browserslist-config": "^4.0.1",
 		"@wordpress/env": "^4.0.5",
+		"@wordpress/eslint-plugin": "^9.1.0",
 		"@wordpress/scripts": "^16.1.4",
 		"@wordpress/stylelint-config": "^19.0.5",
 		"classnames": "^2.3.1"
 	},
-	"browserslist": [
-		"extends @wordpress/browserslist-config"
-	],
 	"scripts": {
 		"wp-env": "wp-env",
 		"build": "wp-scripts build",
 		"start": "wp-scripts start",
+		"format:js": "wp-scripts format src -- --config=./.prettierrc.js",
+		"format:php": "composer run format",
 		"lint:css": "wp-scripts lint-style src",
-		"lint:php": "composer run lint",
-		"format:php": "composer run format"
+		"lint:js": "wp-scripts lint-js src",
+		"lint:php": "composer run lint"
+	},
+	"browserslist": [
+		"extends @wordpress/browserslist-config"
+	],
+	"eslintConfig": {
+		"extends": "./.eslintrc.js"
 	},
 	"stylelint": {
 		"extends": "./.stylelintrc"

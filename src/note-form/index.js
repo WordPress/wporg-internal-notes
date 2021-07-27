@@ -20,21 +20,19 @@ export const NoteForm = () => {
 
 	return (
 		<PanelBody className="wporg-internal-notes__note-form">
-			{ isOpen &&
+			{ isOpen && (
 				<>
 					<TextareaControl
 						className="wporg-internal-notes__note-form-textarea"
 						label={ __( 'Add a note', 'wporg-internal-notes' ) }
 						value={ note }
-						onChange={ newValue => setNote( newValue ) }
+						onChange={ ( newValue ) => setNote( newValue ) }
 						rows="2"
 						disabled={ isLoading }
 					/>
 					<div className="wporg-internal-notes__note-form-buttons">
-						{ isLoading &&
-							<Spinner />
-						}
-						{ ! isLoading &&
+						{ isLoading && <Spinner /> }
+						{ ! isLoading && (
 							<>
 								<Button
 									className="wporg-internal-notes__note-form-button-cancel"
@@ -52,31 +50,31 @@ export const NoteForm = () => {
 										setIsLoading( true );
 										createNote( {
 											excerpt: note,
-										} ).then( ( { note } ) => {
+										} ).then( ( { note: createdNote } ) => {
 											setNote( '' );
 											setIsLoading( false );
 											setTimeout( () => {
-												clearIsCreated( note.id );
+												clearIsCreated( createdNote.id );
 											}, 500 );
 										} );
 									} }
 									isPrimary
 								/>
 							</>
-						}
+						) }
 					</div>
 				</>
-			}
-			{ ! isOpen &&
+			) }
+			{ ! isOpen && (
 				<Button
 					className="wporg-internal-notes__note-form-button-toggle"
 					text={ __( 'Add a note', 'wporg-internal-notes' ) }
-					onClick={ () => { setIsOpen( true ); } }
+					onClick={ () => {
+						setIsOpen( true );
+					} }
 					isPrimary
 				/>
-			}
+			) }
 		</PanelBody>
 	);
 };
-
-

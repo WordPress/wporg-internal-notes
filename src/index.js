@@ -9,9 +9,7 @@ import { registerPlugin } from '@wordpress/plugins';
 import { NotesSidebar } from './sidebar';
 
 const PluginWrapper = () => {
-	return (
-		<NotesSidebar />
-	);
+	return <NotesSidebar />;
 };
 
 registerPlugin( 'wporg-internal-notes', {

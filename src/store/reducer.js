@@ -12,10 +12,7 @@ const DEFAULT_STATE = {
 	isDeleted: [],
 };
 
-export const reducer = (
-	state = DEFAULT_STATE,
-	{ note, notes, noteId, totalNotes, type }
-) => {
+export const reducer = ( state = DEFAULT_STATE, { note, notes, noteId, totalNotes, type } ) => {
 	switch ( type ) {
 		case CREATE_NOTE:
 			return {
@@ -27,15 +24,15 @@ export const reducer = (
 		case CLEAR_IS_CREATED:
 			return {
 				...state,
-				isCreated: [ ...state.isCreated ].filter( id => id !== noteId ),
+				isCreated: [ ...state.isCreated ].filter( ( id ) => id !== noteId ),
 			};
 		case DELETE_NOTE:
 			return {
 				...state,
 				totalNotes: state.totalNotes - 1,
-				notes: [ ...state.notes ].filter( item => item.id !== noteId ),
-				isDeleted: [ ...state.isDeleted ].filter( id => id !== noteId ),
-			}
+				notes: [ ...state.notes ].filter( ( item ) => item.id !== noteId ),
+				isDeleted: [ ...state.isDeleted ].filter( ( id ) => id !== noteId ),
+			};
 		case SET_IS_DELETED:
 			return {
 				...state,
@@ -48,7 +45,7 @@ export const reducer = (
 				notes,
 			};
 		case APPEND_NOTES:
-			const noteIds = notes.map( note => note.id );
+			const noteIds = notes.map( ( appendedNote ) => appendedNote.id );
 
 			return {
 				...state,
@@ -59,4 +56,4 @@ export const reducer = (
 		default:
 			return state;
 	}
-}
+};

@@ -2,7 +2,7 @@
  * WordPress dependencies.
  */
 import { select } from '@wordpress/data';
-import { __unstableAwaitPromise, apiFetch } from '@wordpress/data-controls';
+import { __unstableAwaitPromise, apiFetch } from '@wordpress/data-controls'; // eslint-disable-line @wordpress/no-unsafe-wp-apis
 import { addQueryArgs } from '@wordpress/url';
 
 export const getApiPath = ( { noteId, queryArgs = [] } ) => {
@@ -23,7 +23,7 @@ export function* fetchNotes( offset = 0 ) {
 		_embed: true,
 		context: 'edit',
 		per_page: 10,
-		offset: offset
+		offset,
 	};
 
 	const response = yield apiFetch( {
@@ -31,10 +31,10 @@ export function* fetchNotes( offset = 0 ) {
 		parse: false,
 	} );
 
-	const parseResponse = async ( response ) => {
+	const parseResponse = async ( resp ) => {
 		return {
-			totalNotes: Number( response.headers?.get( 'X-WP-Total' ) || 0 ),
-			notes: await response.json(),
+			totalNotes: Number( resp.headers?.get( 'X-WP-Total' ) || 0 ),
+			notes: await resp.json(),
 		};
 	};
 

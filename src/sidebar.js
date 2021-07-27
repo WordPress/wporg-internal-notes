@@ -9,20 +9,18 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies.
  */
-import { LoadMore } from "./load-more";
+import { LoadMore } from './load-more';
 import { NoteForm } from './note-form/';
 import { NotesList } from './notes-list/';
-import { store as notesStore } from "./store";
+import { store as notesStore } from './store';
 import './sidebar.scss';
 
 const SidebarIcon = () => {
-	const { getTotalNotesCount } = useSelect( select => select( notesStore ) );
+	const { getTotalNotesCount } = useSelect( ( select ) => select( notesStore ) );
 
 	return (
 		<div className="wporg-internal-notes__sidebar-icon">
-			<span className="note-count">
-				{ getTotalNotesCount().toLocaleString() }
-			</span>
+			<span className="note-count">{ getTotalNotesCount().toLocaleString() }</span>
 			<Icon icon="edit-page" />
 		</div>
 	);
@@ -38,13 +36,11 @@ export const NotesSidebar = () => {
 			name="wporg-internal-notes__sidebar"
 			className="wporg-internal-notes__sidebar"
 			title={ __( 'Internal Notes', 'wporg-internal-notes' ) }
-			icon={
-				<SidebarIcon />
-			}
+			icon={ <SidebarIcon /> }
 		>
 			<NoteForm />
 			<NotesList notes={ initialNotes } />
 			<LoadMore />
 		</PluginSidebar>
 	);
-}
+};
