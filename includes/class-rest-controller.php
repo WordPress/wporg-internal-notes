@@ -392,46 +392,46 @@ class REST_Controller extends \WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'date'          => array(
-					'description' => __( "The date the note was added, in the site's timezone." ),
+					'description' => __( "The date the note was added, in the site's timezone.", 'wporg-internal-notes' ),
 					'type'        => array( 'string', 'null' ),
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date_gmt'      => array(
-					'description' => __( 'The date the note was added, as GMT.' ),
+					'description' => __( 'The date the note was added, as GMT.', 'wporg-internal-notes' ),
 					'type'        => array( 'string', 'null' ),
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date_relative' => array(
-					'description' => __( "The date the note was added, as a human-readable relative string." ),
+					'description' => __( 'The date the note was added, as a human-readable relative string.', 'wporg-internal-notes' ),
 					'type'        => array( 'string' ),
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'id'            => array(
-					'description' => __( 'Unique identifier for the post.' ),
+					'description' => __( 'Unique identifier for the post.', 'wporg-internal-notes' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'parent'        => array(
-					'description' => __( 'The ID for the parent of the post.' ),
+					'description' => __( 'The ID for the parent of the post.', 'wporg-internal-notes' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'author'        => array(
-					'description' => __( 'The ID for the author of the post.' ),
+					'description' => __( 'The ID for the author of the post.', 'wporg-internal-notes' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'excerpt'       => array(
-					'description' => __( 'The excerpt for the post.' ),
+					'description' => __( 'The excerpt for the post.', 'wporg-internal-notes' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
@@ -440,13 +440,13 @@ class REST_Controller extends \WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Excerpt for the post, as it exists in the database.' ),
+							'description' => __( 'Excerpt for the post, as it exists in the database.', 'wporg-internal-notes' ),
 							'type'        => 'string',
 							'context'     => array( 'edit' ),
 							'maxLength'   => 1000,
 						),
 						'rendered' => array(
-							'description' => __( 'HTML excerpt for the post, transformed for display.' ),
+							'description' => __( 'HTML excerpt for the post, transformed for display.', 'wporg-internal-notes' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
@@ -521,7 +521,7 @@ class REST_Controller extends \WP_REST_Controller {
 	protected function get_note( $note_id ) {
 		$error = new \WP_Error(
 			'rest_post_invalid_id',
-			__( 'Invalid post ID.' ),
+			__( 'Invalid post ID.', 'wporg-internal-notes' ),
 			array( 'status' => 404 )
 		);
 

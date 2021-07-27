@@ -73,9 +73,9 @@ function enqueue_editor_assets() {
 		return;
 	}
 
-	$script_asset_path = __DIR__ . "/build/index.asset.php";
+	$script_asset_path = __DIR__ . '/build/index.asset.php';
 	if ( ! is_readable( $script_asset_path ) ) {
-		throw new \Error( 'You need to run `npm start` or `npm build` to build the assets.' );
+		wp_die( esc_html__( 'You need to run `npm start` or `npm build` to build the assets.', 'wporg-internal-notes' ) );
 	}
 
 	$script_asset = require( $script_asset_path );
