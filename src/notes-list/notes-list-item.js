@@ -22,6 +22,7 @@ const DeleteButton = ( { noteId } ) => {
 	const [ confirm, setConfirm ] = useState( false );
 	const { deleteNote, setIsDeleted } = useDispatch( notesStore );
 
+	// This allows us to avoid the eslint warning against global event listeners.
 	const confirmRef = useRefEffect( ( node ) => {
 		const { ownerDocument } = node;
 
