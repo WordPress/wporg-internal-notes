@@ -61,7 +61,7 @@ const DeleteButton = ( { noteId } ) => {
 						setIsDeleted( noteId );
 						setTimeout( () => {
 							deleteNote( noteId );
-						}, 500 );
+						}, 300 );
 					} }
 				>
 					{ __( 'Delete this note?', 'wporg-internal-notes' ) }

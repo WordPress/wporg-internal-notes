@@ -48,9 +48,9 @@ export const NoteForm = () => {
 									text={ __( 'Submit', 'wporg-internal-notes' ) }
 									onClick={ () => {
 										if( ! note.length ) {
-											return;	
+											return;
 										}
-										
+
 										setIsLoading( true );
 										createNote( {
 											excerpt: note,
@@ -59,7 +59,7 @@ export const NoteForm = () => {
 											setIsLoading( false );
 											setTimeout( () => {
 												clearIsCreated( createdNote.id );
-											}, 500 );
+											}, 300 );
 										} );
 									} }
 									isPrimary
