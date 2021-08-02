@@ -42,7 +42,7 @@ export const LoadMore = () => {
 												clearIsCreated( note.id );
 											} );
 											setIsLoading( false );
-										}, 500 );
+										}, 300 );
 									} );
 								} }
 							/>
