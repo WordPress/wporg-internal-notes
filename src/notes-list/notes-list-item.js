@@ -112,11 +112,12 @@ export const NotesListItem = ( { className, note } ) => {
 				<div>
 					<div className="wporg-internal-notes__note-author">
 						<img className="wporg-internal-notes__note-author-avatar" src={ avatarUrl } alt="" />
-						<span className="wporg-internal-notes__note-author-name">
-							<a href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }>
-								{ sprintf( '@%s', slug ) }
-							</a>
-						</span>
+						<a
+							className="wporg-internal-notes__note-author-name"
+							href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }
+						>
+							{ sprintf( '@%s', slug ) }
+						</a>
 					</div>
 					<time className="wporg-internal-notes__note-date" title={ dateIso } dateTime={ dateIso }>
 						{ dateRelative }
