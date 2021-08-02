@@ -47,6 +47,10 @@ export const NoteForm = () => {
 									className="wporg-internal-notes__note-form-button-submit"
 									text={ __( 'Submit', 'wporg-internal-notes' ) }
 									onClick={ () => {
+										if( ! note.length ) {
+											return;	
+										}
+										
 										setIsLoading( true );
 										createNote( {
 											excerpt: note,
