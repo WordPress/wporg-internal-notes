@@ -62,7 +62,7 @@ class REST_Controller extends \WP_REST_Controller {
 			array(
 				'args'   => array(
 					'parent' => array(
-						'description' => __( 'The ID for the parent of the object.', 'wporg-internal-notes' ),
+						'description' => __( 'The ID for the parent of the object.', 'wporg' ),
 						'type'        => 'integer',
 					),
 				),
@@ -88,11 +88,11 @@ class REST_Controller extends \WP_REST_Controller {
 			array(
 				'args'   => array(
 					'parent' => array(
-						'description' => __( 'The ID for the parent of the object.', 'wporg-internal-notes' ),
+						'description' => __( 'The ID for the parent of the object.', 'wporg' ),
 						'type'        => 'integer',
 					),
 					'id'     => array(
-						'description' => __( 'The ID for the note object.', 'wporg-internal-notes' ),
+						'description' => __( 'The ID for the note object.', 'wporg' ),
 						'type'        => 'integer',
 					),
 				),
@@ -144,7 +144,7 @@ class REST_Controller extends \WP_REST_Controller {
 		if ( ! current_user_can( $cap, $arg ) ) {
 			return new \WP_Error(
 				'rest_cannot_access',
-				__( 'Sorry, you are not allowed to access internal notes on this post.', 'wporg-internal-notes' ),
+				__( 'Sorry, you are not allowed to access internal notes on this post.', 'wporg' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -284,7 +284,7 @@ class REST_Controller extends \WP_REST_Controller {
 		if ( ! $excerpt ) {
 			return new \WP_Error(
 				'rest_missing_param',
-				__( 'The post_excerpt parameter must contain a valid string.', 'wporg-internal-notes' ),
+				__( 'The post_excerpt parameter must contain a valid string.', 'wporg' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -392,46 +392,46 @@ class REST_Controller extends \WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'date'          => array(
-					'description' => __( "The date the note was added, in the site's timezone.", 'wporg-internal-notes' ),
+					'description' => __( "The date the note was added, in the site's timezone.", 'wporg' ),
 					'type'        => array( 'string', 'null' ),
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date_gmt'      => array(
-					'description' => __( 'The date the note was added, as GMT.', 'wporg-internal-notes' ),
+					'description' => __( 'The date the note was added, as GMT.', 'wporg' ),
 					'type'        => array( 'string', 'null' ),
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'date_relative' => array(
-					'description' => __( 'The date the note was added, as a human-readable relative string.', 'wporg-internal-notes' ),
+					'description' => __( 'The date the note was added, as a human-readable relative string.', 'wporg' ),
 					'type'        => array( 'string' ),
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'id'            => array(
-					'description' => __( 'Unique identifier for the post.', 'wporg-internal-notes' ),
+					'description' => __( 'Unique identifier for the post.', 'wporg' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'parent'        => array(
-					'description' => __( 'The ID for the parent of the post.', 'wporg-internal-notes' ),
+					'description' => __( 'The ID for the parent of the post.', 'wporg' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'author'        => array(
-					'description' => __( 'The ID for the author of the post.', 'wporg-internal-notes' ),
+					'description' => __( 'The ID for the author of the post.', 'wporg' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'excerpt'       => array(
-					'description' => __( 'The excerpt for the post.', 'wporg-internal-notes' ),
+					'description' => __( 'The excerpt for the post.', 'wporg' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
@@ -440,13 +440,13 @@ class REST_Controller extends \WP_REST_Controller {
 					),
 					'properties'  => array(
 						'raw'      => array(
-							'description' => __( 'Excerpt for the post, as it exists in the database.', 'wporg-internal-notes' ),
+							'description' => __( 'Excerpt for the post, as it exists in the database.', 'wporg' ),
 							'type'        => 'string',
 							'context'     => array( 'edit' ),
 							'maxLength'   => 1000,
 						),
 						'rendered' => array(
-							'description' => __( 'HTML excerpt for the post, transformed for display.', 'wporg-internal-notes' ),
+							'description' => __( 'HTML excerpt for the post, transformed for display.', 'wporg' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
@@ -470,12 +470,12 @@ class REST_Controller extends \WP_REST_Controller {
 		$params = parent::get_collection_params();
 
 		$params['offset'] = array(
-			'description' => __( 'Offset the result set by a specific number of items.', 'wporg-internal-notes' ),
+			'description' => __( 'Offset the result set by a specific number of items.', 'wporg' ),
 			'type'        => 'integer',
 		);
 
 		$params['order'] = array(
-			'description' => __( 'Order sort attribute ascending or descending.', 'wporg-internal-notes' ),
+			'description' => __( 'Order sort attribute ascending or descending.', 'wporg' ),
 			'type'        => 'string',
 			'default'     => 'desc',
 			'enum'        => array( 'asc', 'desc' ),
@@ -496,7 +496,7 @@ class REST_Controller extends \WP_REST_Controller {
 	protected function get_parent( $parent ) {
 		$error = new \WP_Error(
 			'rest_post_invalid_parent',
-			__( 'Invalid post parent ID.', 'wporg-internal-notes' ),
+			__( 'Invalid post parent ID.', 'wporg' ),
 			array( 'status' => 404 )
 		);
 		if ( (int) $parent <= 0 ) {
@@ -521,7 +521,7 @@ class REST_Controller extends \WP_REST_Controller {
 	protected function get_note( $note_id ) {
 		$error = new \WP_Error(
 			'rest_post_invalid_id',
-			__( 'Invalid post ID.', 'wporg-internal-notes' ),
+			__( 'Invalid post ID.', 'wporg' ),
 			array( 'status' => 404 )
 		);
 

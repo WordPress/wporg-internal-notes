@@ -1,36 +1,24 @@
 {
-	"name": "wporg-internal-notes",
-	"version": "0.0.0",
-	"description": "Enables adding internal notes to supporting post types on WordPress.org",
+	"name": "wporg-internal-notes-project",
+	"version": "1.0.0",
+	"description": "",
 	"author": "WordPress.org",
 	"license": "GPL-2.0-or-later",
 	"private": true,
 	"dependencies": {},
 	"devDependencies": {
-		"@wordpress/browserslist-config": "^4.0.1",
-		"@wordpress/env": "^4.0.5",
-		"@wordpress/eslint-plugin": "^9.1.0",
-		"@wordpress/scripts": "^16.1.4",
-		"@wordpress/stylelint-config": "^19.0.5",
-		"classnames": "^2.3.1"
+		"@wordpress/env": "^4.1.1"
 	},
 	"scripts": {
-		"wp-env": "wp-env",
-		"build": "wp-scripts build",
-		"start": "wp-scripts start",
-		"format:js": "wp-scripts format src -- --config=./.prettierrc.js",
+		"initial-setup": "yarn && composer install && yarn run update-configs",
+		"update-configs": "TEXTDOMAIN=wporg composer exec update-configs",
 		"format:php": "composer run format",
-		"lint:css": "wp-scripts lint-style src",
-		"lint:js": "wp-scripts lint-js src",
-		"lint:php": "composer run lint"
+		"lint:php": "composer run lint",
+		"wp-env": "wp-env",
+		"env": "wp-env start",
+		"env:stop": "wp-env stop"
 	},
-	"browserslist": [
-		"extends @wordpress/browserslist-config"
-	],
-	"eslintConfig": {
-		"extends": "./.eslintrc.js"
-	},
-	"stylelint": {
-		"extends": "./.stylelintrc"
-	}
+	"workspaces": [
+		"source/wp-content/plugins/wporg-internal-notes"
+	]
 }

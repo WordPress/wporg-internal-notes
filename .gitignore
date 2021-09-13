@@ -6,3 +6,9 @@
 
 # Allow local environment overrides.
 .wp-env.override.json
+
+# Configs from wporg-repo-tools.
+.eslintrc.js
+.prettierrc.js
+.stylelintrc
+phpcs.xml.dist

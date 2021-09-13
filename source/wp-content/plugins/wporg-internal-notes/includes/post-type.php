@@ -23,7 +23,7 @@ function register_cpt() {
 	register_post_type(
 		POST_TYPE,
 		array(
-			'label'            => __( 'Internal Notes', 'wporg-internal-notes' ),
+			'label'            => __( 'Internal Notes', 'wporg' ),
 			'public'           => false,
 			'show_in_rest'     => false,
 			'capabilities'     => array(
@@ -103,7 +103,7 @@ function delete_note( $note_id ) {
 	if ( POST_TYPE !== get_post_type( $note_id ) ) {
 		return new \WP_Error(
 			'invalid_post',
-			__( 'Could not delete object because it is not a note.', 'wporg-internal-notes' )
+			__( 'Could not delete object because it is not a note.', 'wporg' )
 		);
 	}
 
@@ -112,7 +112,7 @@ function delete_note( $note_id ) {
 	if ( ! $result instanceof \WP_Post ) {
 		return new \WP_Error(
 			'delete_failed',
-			__( 'The note could not be deleted.', 'wporg-internal-notes' )
+			__( 'The note could not be deleted.', 'wporg' )
 		);
 	}
 

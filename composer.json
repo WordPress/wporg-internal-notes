@@ -1,22 +1,29 @@
 {
-	"name": "wporg/internal-notes",
+	"name": "wporg/wporg-internal-notes",
 	"description": "",
 	"homepage": "https://wordpress.org",
 	"license": "GPL-2.0-or-later",
 	"support": {
-		"issues": "https://github.com/WordPress/wordpress.org/issues"
+		"issues": "https://github.com/WordPress/wporg-internal-notes/issues"
 	},
 	"config": {
 		"platform": {
 			"php": "7.4"
 		}
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "git@github.com:WordPress/wporg-repo-tools.git"
+		}
+	],
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
 		"wp-coding-standards/wpcs": "2.*",
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"wp-phpunit/wp-phpunit": "^5.4",
-		"phpunit/phpunit": "^7.5.20"
+		"phpunit/phpunit": "^7.5.20",
+		"wporg/wporg-repo-tools": "dev-trunk"
 	},
 	"scripts": {
 		"format": "phpcbf -p",

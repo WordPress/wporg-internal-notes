@@ -7,8 +7,8 @@
 		"WP_ENVIRONMENT_TYPE": "local"
 	},
 	"core": "WordPress/WordPress#master",
-	"plugins": [ "." ],
+	"plugins": [ "./source/wp-content/plugins/wporg-internal-notes" ],
 	"mappings": {
-		"wp-content/mu-plugins/0-sandbox.php": "./.wp-env/0-sandbox.php"
+		"wp-content/mu-plugins/0-sandbox.php": "./env/0-sandbox.php"
 	}
 }

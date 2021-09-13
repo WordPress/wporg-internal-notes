@@ -35,7 +35,7 @@ export const NotesSidebar = () => {
 		<PluginSidebar
 			name="wporg-internal-notes__sidebar"
 			className="wporg-internal-notes__sidebar"
-			title={ __( 'Internal Notes', 'wporg-internal-notes' ) }
+			title={ __( 'Internal Notes', 'wporg' ) }
 			icon={ <SidebarIcon /> }
 		>
 			<NoteForm />

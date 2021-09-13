@@ -44,7 +44,7 @@ const DeleteButton = ( { noteId } ) => {
 			{ ! confirm && (
 				<Button
 					className="wporg-internal-notes__note-button-delete"
-					label={ __( 'Delete note', 'wporg-internal-notes' ) }
+					label={ __( 'Delete note', 'wporg' ) }
 					icon="trash"
 					isSecondary
 					onClick={ () => {
@@ -64,7 +64,7 @@ const DeleteButton = ( { noteId } ) => {
 						}, 300 );
 					} }
 				>
-					{ __( 'Delete this note?', 'wporg-internal-notes' ) }
+					{ __( 'Delete this note?', 'wporg' ) }
 				</Button>
 			) }
 		</>
@@ -90,7 +90,7 @@ export const NotesListItem = ( { className, note } ) => {
 	if ( ! author || ! dateRelative || ! excerpt ) {
 		return (
 			<li className={ classnames( 'wporg-internal-notes__note', 'is-error', className ) }>
-				{ __( 'Missing data.', 'wporg-internal-notes' ) }
+				{ __( 'Missing data.', 'wporg' ) }
 			</li>
 		);
 	}

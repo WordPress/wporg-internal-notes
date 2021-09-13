@@ -24,7 +24,7 @@ export const NoteForm = () => {
 				<>
 					<TextareaControl
 						className="wporg-internal-notes__note-form-textarea"
-						label={ __( 'Add a note', 'wporg-internal-notes' ) }
+						label={ __( 'Add a note', 'wporg' ) }
 						value={ note }
 						onChange={ ( newValue ) => setNote( newValue ) }
 						rows="2"
@@ -36,7 +36,7 @@ export const NoteForm = () => {
 							<>
 								<Button
 									className="wporg-internal-notes__note-form-button-cancel"
-									text={ __( 'Cancel', 'wporg-internal-notes' ) }
+									text={ __( 'Cancel', 'wporg' ) }
 									onClick={ ( event ) => {
 										event.preventDefault();
 										setIsOpen( false );
@@ -45,9 +45,9 @@ export const NoteForm = () => {
 								/>
 								<Button
 									className="wporg-internal-notes__note-form-button-submit"
-									text={ __( 'Submit', 'wporg-internal-notes' ) }
+									text={ __( 'Submit', 'wporg' ) }
 									onClick={ () => {
-										if( ! note.length ) {
+										if ( ! note.length ) {
 											return;
 										}
 
@@ -72,7 +72,7 @@ export const NoteForm = () => {
 			{ ! isOpen && (
 				<Button
 					className="wporg-internal-notes__note-form-button-toggle"
-					text={ __( 'Add a note', 'wporg-internal-notes' ) }
+					text={ __( 'Add a note', 'wporg' ) }
 					onClick={ () => {
 						setIsOpen( true );
 					} }

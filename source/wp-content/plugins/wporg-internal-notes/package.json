@@ -1,0 +1,30 @@
+{
+	"name": "wporg-internal-notes",
+	"version": "1.0.0",
+	"description": "Enables adding internal notes to supporting post types on WordPress.org",
+	"author": "WordPress.org",
+	"license": "GPL-2.0-or-later",
+	"private": true,
+	"dependencies": {},
+	"devDependencies": {
+		"@wordpress/browserslist-config": "^4.1.0",
+		"@wordpress/scripts": "16.1.4",
+		"classnames": "^2.3.1"
+	},
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"format:js": "wp-scripts format src -- --config=../../../../.prettierrc.js",
+		"lint:css": "wp-scripts lint-style src",
+		"lint:js": "wp-scripts lint-js src"
+	},
+	"browserslist": [
+		"extends @wordpress/browserslist-config"
+	],
+	"eslintConfig": {
+		"extends": "../../../../.eslintrc.js"
+	},
+	"stylelint": {
+		"extends": "../../../../.stylelintrc"
+	}
+}
