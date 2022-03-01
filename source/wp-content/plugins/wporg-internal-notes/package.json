@@ -3,8 +3,12 @@
 	"version": "1.0.0",
 	"description": "Enables adding internal notes to supporting post types on WordPress.org",
 	"author": "WordPress.org",
+	"homepage": "https://wordpress.org",
 	"license": "GPL-2.0-or-later",
 	"private": true,
+	"support": {
+		"issues": "https://github.com/WordPress/wporg-internal-notes/issues"
+	},
 	"dependencies": {},
 	"devDependencies": {
 		"@wordpress/browserslist-config": "^4.1.0",
