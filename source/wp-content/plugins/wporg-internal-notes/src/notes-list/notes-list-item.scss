@@ -2,14 +2,16 @@
 .wporg-internal-notes__note {
 	border-bottom: 1px solid #e0e0e0;
 	margin: 0;
-	padding: 16px 16px 8px;
+	padding: 1rem;
 
 	> * {
 		transition: opacity 300ms ease-out;
 	}
 
-	&:last-of-type {
-		border-bottom: 0;
+	&.log-note {
+		background-color: #fafafa;
+		border-left: 5px solid #e0e0e0;
+		padding: 0.5rem;
 	}
 
 	.components-button {
@@ -34,16 +36,16 @@
 	}
 }
 
-.wporg-internal-notes__note-header {
+.wporg-internal-notes__note-header,
+.wporg-internal-notes__note-footer, {
 	display: flex;
 	justify-content: space-between;
-	align-items: flex-start;
+	align-items: center;
 }
 
 .wporg-internal-notes__note-author {
 	display: flex;
 	align-items: center;
-	margin: 0 0 0.5rem;
 }
 
 .wporg-internal-notes__note-author-avatar {
@@ -57,6 +59,33 @@
 
 .wporg-internal-notes__note-date {
 	display: block;
-	margin: 0.5rem 0;
 	font-style: italic;
+}
+
+.wporg-internal-notes__note-excerpt {
+	p:last-child {
+		margin-bottom: 0;
+	}
+
+	.log-note & {
+		p {
+			font-size: 0.9em;
+		}
+	}
+}
+
+.wporg-internal-notes__note-header {
+	margin: 0 0 0.5rem;
+}
+
+.wporg-internal-notes__note-footer {
+	margin-top: 0.5rem;
+
+	.log-note & {
+		font-size: 0.9em;
+	}
+
+	.wporg-internal-notes__note-author-name {
+		margin: 0 0 0 0.5rem;
+	}
 }
