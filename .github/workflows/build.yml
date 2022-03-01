@@ -18,11 +18,15 @@ jobs:
       - name: Build
         run: yarn workspaces run build
 
-      # Got to be a better way than this, but it works.
       - name: Remove Source files
         run: |
           rm -rf source/wp-content/plugins/wporg-internal-notes/src
           rm -rf source/wp-content/plugins/wporg-internal-notes/node_modules
+
+      - name: Create package.json
+        run: |
+          cd source/wp-content/plugins/wporg-internal-notes/
+          cat <<<$( jq '{ name, version, description, author, homepage, license, support }' package.json ) > package.json
 
       - name: Push
         uses: s0/git-publish-subdir-action@develop
