@@ -124,16 +124,19 @@ class REST_Controller extends \WP_REST_Controller {
 
 		switch ( $request->get_method() ) {
 			case \WP_REST_Server::READABLE:
-				$cap = 'read-internal-notes';
+				$cap = 'read-notes';
 				$arg = $parent->ID;
+				$msg = __( 'Sorry, you are not allowed to access internal notes on this post.', 'wporg' );
 				break;
 			case \WP_REST_Server::CREATABLE:
-				$cap = 'create-internal-note';
+				$cap = 'create-note';
 				$arg = $parent->ID;
+				$msg = __( 'Sorry, you are not allowed to create internal notes on this post.', 'wporg' );
 				break;
 			case \WP_REST_Server::DELETABLE:
-				$cap = 'delete-internal-note';
+				$cap = 'delete-note';
 				$arg = $request['id'];
+				$msg = __( 'Sorry, you are not allowed to delete this note.', 'wporg' );
 				break;
 			default:
 				$cap = 'do_not_allow';
@@ -144,7 +147,7 @@ class REST_Controller extends \WP_REST_Controller {
 		if ( ! current_user_can( $cap, $arg ) ) {
 			return new \WP_Error(
 				'rest_cannot_access',
-				__( 'Sorry, you are not allowed to access internal notes on this post.', 'wporg' ),
+				$msg,
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -328,14 +331,15 @@ class REST_Controller extends \WP_REST_Controller {
 			human_time_diff( strtotime( $note->post_date_gmt ), time() )
 		);
 
+		$data['id']     = (int) $note->ID;
+		$data['parent'] = (int) $note->post_parent;
+		$data['author'] = (int) $note->post_author;
+		$data['type']   = $note->post_type;
+
 		$data['excerpt'] = array(
 			'raw'       => $note->post_excerpt,
 			'rendered'  => wpautop( $note->post_excerpt ),
 		);
-
-		$data['id']     = (int) $note->ID;
-		$data['author'] = (int) $note->post_author;
-		$data['parent'] = (int) $note->post_parent;
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data     = $this->filter_response_by_context( $data, $context );
@@ -427,6 +431,13 @@ class REST_Controller extends \WP_REST_Controller {
 				'author'        => array(
 					'description' => __( 'The ID for the author of the post.', 'wporg' ),
 					'type'        => 'integer',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'type'         => array(
+					'description' => __( 'Type of note.', 'wporg' ),
+					'type'        => 'string',
+					'enum'        => get_note_post_types(),
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
@@ -530,7 +541,7 @@ class REST_Controller extends \WP_REST_Controller {
 		}
 
 		$post = get_post( (int) $note_id );
-		if ( empty( $post ) || empty( $post->ID ) || POST_TYPE !== $post->post_type ) {
+		if ( empty( $post ) || empty( $post->ID ) || ! in_array( $post->post_type, get_note_post_types(), true ) ) {
 			return $error;
 		}
 
