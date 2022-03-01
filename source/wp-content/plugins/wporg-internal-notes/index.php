@@ -69,7 +69,7 @@ function enqueue_editor_assets() {
 		return;
 	}
 
-	if ( ! current_user_can( 'read-internal-notes', $post->ID ) ) {
+	if ( ! current_user_can( 'read-notes', $post->ID ) ) {
 		return;
 	}
 
