@@ -36,6 +36,7 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_editor_asse
 function load() {
 	require_once PLUGIN_DIR . 'includes/capabilities.php';
 	require_once PLUGIN_DIR . 'includes/class-rest-controller.php';
+	require_once PLUGIN_DIR . 'includes/logging.php';
 	require_once PLUGIN_DIR . 'includes/post-type.php';
 }
 
