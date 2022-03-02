@@ -1,6 +1,8 @@
 <?php
 
-namespace WordPressdotorg\InternalNotes;
+namespace WordPressdotorg\InternalNotes\Logging;
+
+use WordPressdotorg\InternalNotes;
 
 defined( 'WPINC' ) || die();
 
@@ -9,12 +11,15 @@ defined( 'WPINC' ) || die();
  */
 add_action( 'post_updated', __NAMESPACE__ . '\post_update', 10, 3 );
 add_action( 'transition_post_status', __NAMESPACE__ . '\status_change', 10, 3 );
+add_action( 'set_object_terms', __NAMESPACE__ . '\add_terms', 10, 6 );
+add_action( 'deleted_term_relationships', __NAMESPACE__ . '\remove_terms', 10, 3 );
 
 /**
  * Check if logging has been enabled for a particular feature/change.
  *
  * Available features:
  * - post-update
+ * - terms-change
  * - status-change
  *
  * @param int    $post_id
@@ -77,10 +82,10 @@ function post_update( $post_ID, $post_after, $post_before ) {
 
 	$data = array(
 		'post_excerpt' => $msg,
-		'post_type'    => LOG_POST_TYPE,
+		'post_type'    => InternalNotes\LOG_POST_TYPE,
 	);
 
-	create_note( $post_ID, $data );
+	InternalNotes\create_note( $post_ID, $data );
 }
 
 /**
@@ -117,8 +122,101 @@ function status_change( $new_status, $old_status, $post ) {
 
 	$data = array(
 		'post_excerpt' => $msg,
-		'post_type'    => LOG_POST_TYPE,
+		'post_type'    => InternalNotes\LOG_POST_TYPE,
 	);
 
-	create_note( $post->ID, $data );
+	InternalNotes\create_note( $post->ID, $data );
+}
+
+/**
+ * Add a log entry when taxonomy terms are added.
+ *
+ * @param int            $object_id
+ * @param int[]|string[] $terms
+ * @param int[]          $tt_ids
+ * @param string         $taxonomy
+ * @param bool           $append
+ * @param int[]          $old_tt_ids
+ *
+ * @return void
+ */
+function add_terms( $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ) {
+	if ( ! logging_enabled( $object_id, 'terms-change' ) ) {
+		return;
+	}
+
+	$new_tt_ids = array_diff( $tt_ids, $old_tt_ids );
+
+	if ( empty( $new_tt_ids ) ) {
+		return;
+	}
+
+	$new_terms = get_terms( array(
+		'term_taxonomy_id' => $new_tt_ids,
+	) );
+	$new_terms = array_map(
+		function( \WP_Term $term ) {
+			return $term->name;
+		},
+		$new_terms
+	);
+
+	$taxonomy_labels = get_taxonomy_labels( get_taxonomy( $taxonomy ) );
+
+	$msg = sprintf(
+		__( '%1$s added: %2$s', 'wporg' ),
+		$taxonomy_labels->name,
+		implode( __( ', ', 'wporg' ), $new_terms )
+	);
+
+	$data = array(
+		'post_excerpt' => $msg,
+		'post_type'    => InternalNotes\LOG_POST_TYPE,
+	);
+
+	InternalNotes\create_note( $object_id, $data );
+}
+
+/**
+ * Add a log entry when taxonomy terms are removed.
+ *
+ * @param int    $object_id
+ * @param int[]  $tt_ids
+ * @param string $taxonomy
+ *
+ * @return void
+ */
+function remove_terms( $object_id, $tt_ids, $taxonomy ) {
+	if ( ! logging_enabled( $object_id, 'terms-change' ) ) {
+		return;
+	}
+
+	if ( empty( $tt_ids ) ) {
+		return;
+	}
+
+	$removed_terms = get_terms( array(
+		'term_taxonomy_id' => $tt_ids,
+	) );
+	$removed_terms = array_map(
+		function( \WP_Term $term ) {
+			return $term->name;
+		},
+		$removed_terms
+	);
+
+	$taxonomy_labels = get_taxonomy_labels( get_taxonomy( $taxonomy ) );
+
+	$msg = sprintf(
+		__( '%1$s removed: %2$s', 'wporg' ),
+		$taxonomy_labels->name,
+		implode( __( ', ', 'wporg' ), $removed_terms )
+	);
+
+	$data = array(
+		'post_excerpt' => $msg,
+		'post_type'    => InternalNotes\LOG_POST_TYPE,
+	);
+
+	InternalNotes\create_note( $object_id, $data );
 }
