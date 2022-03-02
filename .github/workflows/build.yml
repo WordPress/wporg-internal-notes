@@ -22,11 +22,11 @@ jobs:
         run: |
           rm -rf source/wp-content/plugins/wporg-internal-notes/src
           rm -rf source/wp-content/plugins/wporg-internal-notes/node_modules
+          rm -rf source/wp-content/plugins/wporg-internal-notes/package.json
 
-      - name: Create package.json
+      - name: Create composer.json
         run: |
-          cd source/wp-content/plugins/wporg-internal-notes/
-          cat <<<$( jq '{ name, version, description, author, homepage, license, support }' package.json ) > package.json
+          jq '{ name, version, description, author, homepage, license, support }' composer.json > source/wp-content/plugins/wporg-internal-notes/composer.json
 
       - name: Push
         uses: s0/git-publish-subdir-action@develop
