@@ -8,11 +8,11 @@ To enable internal notes for a particular post type, add this line to an mu-plug
 
 `add_post_type_support( '[post type slug here]', 'wporg-internal-notes' );`
 
-To enable log entries of changes to posts, which will appear in the same stream with internal notes, add this line:
+To enable log entries for changes to posts, which will appear in the same stream with internal notes, add this line:
 
 `add_post_type_support( '[post type slug here]', 'wporg-log-notes' );`
 
-You can also choose which change events to log. See `logging_enabled()` for a list of available events.
+You can also specify only certain change events to log. See `logging_enabled()` for a list of available events.
 
 `add_post_type_support( '[post type slug here]', 'wporg-log-notes', array( 'status-change' => true ) );`
 
