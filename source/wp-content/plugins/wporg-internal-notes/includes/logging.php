@@ -10,6 +10,9 @@ defined( 'WPINC' ) || die();
  * Actions and filters.
  */
 add_action( 'post_updated', __NAMESPACE__ . '\post_update', 10, 3 );
+add_action( 'added_post_meta', __NAMESPACE__ . '\postmeta_update', 10, 4 );
+add_action( 'updated_post_meta', __NAMESPACE__ . '\postmeta_update', 10, 4 );
+add_action( 'deleted_post_meta', __NAMESPACE__ . '\postmeta_update', 10, 4 );
 add_action( 'transition_post_status', __NAMESPACE__ . '\status_change', 10, 3 );
 add_action( 'set_object_terms', __NAMESPACE__ . '\add_terms', 10, 6 );
 add_action( 'deleted_term_relationships', __NAMESPACE__ . '\remove_terms', 10, 3 );
@@ -19,6 +22,7 @@ add_action( 'deleted_term_relationships', __NAMESPACE__ . '\remove_terms', 10, 3
  *
  * Available features:
  * - post-update
+ * - postmeta-update
  * - terms-change
  * - status-change
  *
@@ -86,6 +90,86 @@ function post_update( $post_ID, $post_after, $post_before ) {
 	);
 
 	InternalNotes\create_note( $post_ID, $data );
+}
+
+/**
+ * Add a log entry when certain postmeta values are updated.
+ *
+ * @param int|int[] $meta_id
+ * @param int       $object_id
+ * @param string    $meta_key
+ * @param mixed     $meta_value
+ *
+ * @return void
+ */
+function postmeta_update( $meta_id, $object_id, $meta_key, $meta_value ) {
+	if ( ! logging_enabled( $object_id, 'postmeta-update' ) ) {
+		return;
+	}
+
+	/**
+	 * Filter: Amend list of postmeta keys that will be logged when their values change.
+	 *
+	 * @param string[] $postmeta_keys
+	 */
+	$allowed_postmeta_keys = apply_filters( 'wporg_internal_notes_logging_allowed_postmeta_keys', array(
+		'_thumbnail_id',
+		'_wp_page_template',
+	) );
+
+	if ( ! in_array( $meta_key, $allowed_postmeta_keys, true ) ) {
+		return;
+	}
+
+	$msg = '';
+	switch ( current_action() ) {
+		case 'added_post_meta':
+			$msg = sprintf(
+				__( 'Added postmeta %1$s with value %2$s.', 'wporg' ),
+				esc_html( $meta_key ),
+				esc_html( $meta_value )
+			);
+			break;
+		case 'updated_post_meta':
+			$msg = sprintf(
+				__( 'Updated postmeta %1$s to %2$s.', 'wporg' ),
+				esc_html( $meta_key ),
+				esc_html( $meta_value )
+			);
+			break;
+		case 'deleted_post_meta':
+			$del_count = count( (array) $meta_id );
+			if ( 1 === $del_count ) {
+				if ( $meta_value ) {
+					$msg = sprintf(
+						__( 'Deleted postmeta %1$s with value %2$s.', 'wporg' ),
+						esc_html( $meta_key ),
+						esc_html( $meta_value )
+					);
+				} else {
+					$msg = sprintf(
+						__( 'Deleted postmeta %1$s.', 'wporg' ),
+						esc_html( $meta_key )
+					);
+				}
+			} elseif ( $del_count > 1 ) {
+				$msg = sprintf(
+					__( 'Deleted %1$s postmetas with key %2$s.', 'wporg' ),
+					number_format_i18n( $del_count ),
+					esc_html( $meta_key )
+				);
+			}
+			break;
+	}
+
+	if ( $msg ) {
+		$data = array(
+			'post_excerpt' => $msg,
+			'post_type'    => InternalNotes\LOG_POST_TYPE,
+		);
+
+		InternalNotes\create_note( $object_id, $data );
+	}
 }
 
 /**
