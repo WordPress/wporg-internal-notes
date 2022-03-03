@@ -17,3 +17,7 @@ export function isCreated( state, noteId ) {
 export function isDeleted( state, noteId ) {
 	return state.isDeleted.includes( noteId );
 }
+
+export function getLatestNoteDate( state ) {
+	return state.notes.at(0)?.date || '';
+}

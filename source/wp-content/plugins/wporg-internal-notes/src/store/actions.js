@@ -9,7 +9,7 @@ import { apiFetch } from '@wordpress/data-controls';
 import { TYPES } from './action-types';
 import { fetchNotes, getApiPath } from './utils';
 
-const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
+const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, PREPEND_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
 
 export function* createNote( noteData ) {
 	const queryArgs = {
@@ -60,7 +60,7 @@ export const setIsDeleted = ( noteId ) => {
 };
 
 export function* setNotes() {
-	const { totalNotes, notes } = yield fetchNotes();
+	const { totalNotes, notes } = yield fetchNotes( {} );
 
 	return {
 		type: SET_NOTES,
@@ -69,8 +69,18 @@ export function* setNotes() {
 	};
 }
 
+export function* prependNotes( after ) {
+	const { totalNotes, notes } = yield fetchNotes( { after } );
+
+	return {
+		type: PREPEND_NOTES,
+		totalNotes,
+		notes,
+	};
+}
+
 export function* appendNotes( offset ) {
-	const { totalNotes, notes } = yield fetchNotes( offset );
+	const { totalNotes, notes } = yield fetchNotes( { offset } );
 
 	return {
 		type: APPEND_NOTES,

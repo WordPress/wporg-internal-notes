@@ -171,15 +171,24 @@ class REST_Controller extends \WP_REST_Controller {
 		$args = array();
 
 		$collection_params = array(
+			'offset'   => 'offset',
 			'order'    => 'order',
 			'page'     => 'paged',
 			'per_page' => 'posts_per_page',
-			'offset'   => 'offset',
 		);
 		foreach ( $collection_params as $request_param => $query_param ) {
 			if ( isset( $request[ $request_param ] ) ) {
 				$args[ $query_param ] = $request[ $request_param ];
 			}
+		}
+
+		if ( isset( $request['after'] ) ) {
+			$args['date_query'] = array(
+				array(
+					'after'  => $request['after'],
+					'column' => 'post_date',
+				),
+			);
 		}
 
 		$notes_query = get_notes( $parent->ID, $args, true );
@@ -483,6 +492,12 @@ class REST_Controller extends \WP_REST_Controller {
 		$params['offset'] = array(
 			'description' => __( 'Offset the result set by a specific number of items.', 'wporg' ),
 			'type'        => 'integer',
+		);
+
+		$params['after'] = array(
+			'description' => __( 'Limit response to posts published after a given ISO8601 compliant date.' ),
+			'type'        => 'string',
+			'format'      => 'date-time',
 		);
 
 		$params['order'] = array(

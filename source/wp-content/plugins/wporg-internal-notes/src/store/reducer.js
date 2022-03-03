@@ -3,7 +3,7 @@
  */
 import { TYPES } from './action-types';
 
-const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
+const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, PREPEND_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
 
 const DEFAULT_STATE = {
 	totalNotes: 0,
@@ -44,14 +44,23 @@ export const reducer = ( state = DEFAULT_STATE, { note, notes, noteId, totalNote
 				totalNotes,
 				notes,
 			};
-		case APPEND_NOTES:
-			const noteIds = notes.map( ( appendedNote ) => appendedNote.id );
+		case PREPEND_NOTES:
+			const prependedNoteIds = notes.map( ( prependedNote ) => prependedNote.id );
 
 			return {
 				...state,
-				totalNotes,
+				totalNotes: state.totalNotes + notes.length,
+				notes: [ ...notes, ...state.notes ],
+				isCreated: [ ...state.isCreated, ...prependedNoteIds ],
+			};
+		case APPEND_NOTES:
+			const appendedNoteIds = notes.map( ( appendedNote ) => appendedNote.id );
+
+			return {
+				...state,
+				totalNotes: state.totalNotes, // Just retrieving more notes, not changing the total.
 				notes: [ ...state.notes, ...notes ],
-				isCreated: [ ...state.isCreated, ...noteIds ],
+				isCreated: [ ...state.isCreated, ...appendedNoteIds ],
 			};
 		default:
 			return state;

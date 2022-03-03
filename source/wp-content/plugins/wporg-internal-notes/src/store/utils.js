@@ -18,13 +18,17 @@ export const getApiPath = ( { noteId, queryArgs = [] } ) => {
 	return addQueryArgs( path, queryArgs );
 };
 
-export function* fetchNotes( offset = 0 ) {
-	const queryArgs = {
+export function* fetchNotes( { after = null, offset = 0 } ) {
+	let queryArgs = {
 		_embed: true,
 		context: 'edit',
-		per_page: 10,
+		per_page: 20,
 		offset,
 	};
+
+	if ( after ) {
+		queryArgs.after = after;
+	}
 
 	const response = yield apiFetch( {
 		path: getApiPath( { queryArgs } ),

@@ -10,6 +10,7 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies.
  */
 import { LoadMore } from './load-more';
+import { LoadNew } from "./load-new";
 import { NoteForm } from './note-form/';
 import { NotesList } from './notes-list/';
 import { store as notesStore } from './store';
@@ -39,6 +40,7 @@ export const NotesSidebar = () => {
 			icon={ <SidebarIcon /> }
 		>
 			<NoteForm />
+			<LoadNew />
 			<NotesList notes={ initialNotes } />
 			<LoadMore />
 		</PluginSidebar>
