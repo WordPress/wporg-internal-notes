@@ -1,0 +1,9 @@
+{
+  "name": "wporg/wporg-internal-notes",
+  "description": "",
+  "homepage": "https://wordpress.org",
+  "license": "GPL-2.0-or-later",
+  "support": {
+    "issues": "https://github.com/WordPress/wporg-internal-notes/issues"
+  }
+}
