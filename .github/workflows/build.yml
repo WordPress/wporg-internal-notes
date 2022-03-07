@@ -1,0 +1,38 @@
+name: Update the build branch
+
+on:
+  push:
+    branches: [ 'trunk' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build and push to branch
+    steps:
+      - name: git-checkout
+        uses: actions/checkout@v2
+
+      - name: Install all dependencies
+        run: yarn run initial-setup
+
+      - name: Build
+        run: yarn workspaces run build
+
+      - name: Remove Source files
+        run: |
+          rm -rf source/wp-content/plugins/wporg-internal-notes/src
+          rm -rf source/wp-content/plugins/wporg-internal-notes/node_modules
+          rm -rf source/wp-content/plugins/wporg-internal-notes/package.json
+
+      - name: Create composer.json
+        run: |
+          jq '{ name, description, homepage, license, support }' composer.json > source/wp-content/plugins/wporg-internal-notes/composer.json
+
+      - name: Push
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: build
+          FOLDER: source/wp-content/plugins/wporg-internal-notes
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MESSAGE: "Build: ({sha}) {msg}"
