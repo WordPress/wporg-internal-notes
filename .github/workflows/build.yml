@@ -26,7 +26,7 @@ jobs:
 
       - name: Create composer.json
         run: |
-          jq '{ name, description, homepage, license, support }' composer.json > source/wp-content/plugins/wporg-internal-notes/composer.json
+          jq '{ name, description, type, homepage, license, support }' composer.json > source/wp-content/plugins/wporg-internal-notes/composer.json
 
       - name: Push
         uses: s0/git-publish-subdir-action@develop
