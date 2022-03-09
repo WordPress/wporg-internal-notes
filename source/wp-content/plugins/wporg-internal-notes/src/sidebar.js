@@ -1,16 +1,17 @@
 /**
  * WordPress dependencies.
  */
-import { Icon } from '@wordpress/components';
-import { useSelect } from '@wordpress/data';
+import { Icon, PanelBody, Spinner } from '@wordpress/components';
+import { usePrevious } from '@wordpress/compose';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { PluginSidebar } from '@wordpress/edit-post';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies.
  */
 import { LoadMore } from './load-more';
-import { LoadNew } from "./load-new";
 import { NoteForm } from './note-form/';
 import { NotesList } from './notes-list/';
 import { store as notesStore } from './store';
@@ -28,9 +29,34 @@ const SidebarIcon = () => {
 };
 
 export const NotesSidebar = () => {
-	const initialNotes = useSelect( ( select ) => {
-		return select( notesStore ).getNotes();
+	const { initialNotes, afterDate, isSaving } = useSelect( ( select ) => {
+		return {
+			initialNotes: select( notesStore ).getNotes(),
+			afterDate: select( notesStore ).getLatestNoteDate(),
+			isSaving: select( 'core/editor' ).isSavingPost(),
+		};
 	} );
+	const { prependNotes, clearIsCreated } = useDispatch( notesStore );
+	const prevIsSaving = usePrevious( isSaving );
+	const [ isLoading, setIsLoading ] = useState( false );
+
+	// Update the notes list when new notes are created, even if the sidebar is closed.
+	useEffect( () => {
+		// Gutenberg doesn't have a specific way to check whether the post was just saved, so we store the
+		// previous value of isSaving and when isSaving goes from true -> false, we prepend the notes.
+		const postWasJustSaved = prevIsSaving && ! isSaving;
+		if ( postWasJustSaved ) {
+			setIsLoading( true );
+			prependNotes( afterDate ).then( ( { notes } ) => {
+				setIsLoading( false );
+				setTimeout( () => {
+					notes.forEach( ( note ) => {
+						clearIsCreated( note.id );
+					} );
+				}, 300 );
+			} );
+		}
+	}, [ isSaving, prevIsSaving ] );
 
 	return (
 		<PluginSidebar
@@ -40,7 +66,11 @@ export const NotesSidebar = () => {
 			icon={ <SidebarIcon /> }
 		>
 			<NoteForm />
-			<LoadNew />
+			{ isLoading &&
+				<PanelBody>
+					<Spinner />
+				</PanelBody>
+			}
 			<NotesList notes={ initialNotes } />
 			<LoadMore />
 		</PluginSidebar>
