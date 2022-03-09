@@ -495,7 +495,7 @@ class REST_Controller extends \WP_REST_Controller {
 		);
 
 		$params['after'] = array(
-			'description' => __( 'Limit response to posts published after a given ISO8601 compliant date.' ),
+			'description' => __( 'Limit response to posts published after a given ISO8601 compliant date.', 'wporg' ),
 			'type'        => 'string',
 			'format'      => 'date-time',
 		);

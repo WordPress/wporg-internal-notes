@@ -79,8 +79,10 @@ function post_update( $post_ID, $post_after, $post_before ) {
 	$post_type_labels = get_post_type_labels( get_post_type_object( get_post_type( $post_ID ) ) );
 
 	$msg = sprintf(
+		// translators: 1. Post type name; 2. List of field names;
 		__( '%1$s updated. Changed fields: %2$s', 'wporg' ),
 		$post_type_labels->singular_name,
+		// translators: used between list items, there is a space after the comma.
 		implode( __( ', ', 'wporg' ), $filtered_changed_fields )
 	);
 
@@ -112,10 +114,13 @@ function postmeta_update( $meta_id, $object_id, $meta_key, $meta_value ) {
 	 *
 	 * @param string[] $postmeta_keys
 	 */
-	$allowed_postmeta_keys = apply_filters( 'wporg_internal_notes_logging_allowed_postmeta_keys', array(
-		'_thumbnail_id',
-		'_wp_page_template',
-	) );
+	$allowed_postmeta_keys = apply_filters(
+		'wporg_internal_notes_logging_allowed_postmeta_keys',
+		array(
+			'_thumbnail_id',
+			'_wp_page_template',
+		)
+	);
 
 	if ( ! in_array( $meta_key, $allowed_postmeta_keys, true ) ) {
 		return;
@@ -125,6 +130,7 @@ function postmeta_update( $meta_id, $object_id, $meta_key, $meta_value ) {
 	switch ( current_action() ) {
 		case 'added_post_meta':
 			$msg = sprintf(
+				// translators: 1. Name of postmeta field; 2. The value contained in the field;
 				__( 'Added postmeta %1$s with value %2$s.', 'wporg' ),
 				esc_html( $meta_key ),
 				esc_html( $meta_value )
@@ -132,6 +138,7 @@ function postmeta_update( $meta_id, $object_id, $meta_key, $meta_value ) {
 			break;
 		case 'updated_post_meta':
 			$msg = sprintf(
+				// translators: 1. Name of postmeta field; 2. The value contained in the field;
 				__( 'Updated postmeta %1$s to %2$s.', 'wporg' ),
 				esc_html( $meta_key ),
 				esc_html( $meta_value )
@@ -142,18 +149,21 @@ function postmeta_update( $meta_id, $object_id, $meta_key, $meta_value ) {
 			if ( 1 === $del_count ) {
 				if ( $meta_value ) {
 					$msg = sprintf(
+						// translators: 1. Name of postmeta field; 2. The value contained in the field;
 						__( 'Deleted postmeta %1$s with value %2$s.', 'wporg' ),
 						esc_html( $meta_key ),
 						esc_html( $meta_value )
 					);
 				} else {
 					$msg = sprintf(
-						__( 'Deleted postmeta %1$s.', 'wporg' ),
+						// translators: Name of postmeta field.
+						__( 'Deleted postmeta %s.', 'wporg' ),
 						esc_html( $meta_key )
 					);
 				}
 			} elseif ( $del_count > 1 ) {
 				$msg = sprintf(
+					// translators: 1. Number of fields deleted; 2. Name of the postmeta field;
 					__( 'Deleted %1$s postmetas with key %2$s.', 'wporg' ),
 					number_format_i18n( $del_count ),
 					esc_html( $meta_key )
@@ -198,6 +208,7 @@ function status_change( $new_status, $old_status, $post ) {
 		$old = get_post_status_object( $old_status );
 
 		$msg = sprintf(
+			// translators: 1. Old status; 2. New status;
 			__( 'Status changed from %1$s to %2$s.', 'wporg' ),
 			$old->label ?: $old_status,
 			$new->label ?: $new_status
@@ -235,9 +246,11 @@ function add_terms( $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids
 		return;
 	}
 
-	$new_terms = get_terms( array(
-		'term_taxonomy_id' => $new_tt_ids,
-	) );
+	$new_terms = get_terms(
+		array(
+			'term_taxonomy_id' => $new_tt_ids,
+		)
+	);
 	$new_terms = array_map(
 		function( \WP_Term $term ) {
 			return $term->name;
@@ -248,8 +261,10 @@ function add_terms( $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids
 	$taxonomy_labels = get_taxonomy_labels( get_taxonomy( $taxonomy ) );
 
 	$msg = sprintf(
+		// translators: 1. Name of the taxonomy; 2. List of term names;
 		__( '%1$s added: %2$s', 'wporg' ),
 		$taxonomy_labels->name,
+		// translators: used between list items, there is a space after the comma.
 		implode( __( ', ', 'wporg' ), $new_terms )
 	);
 
@@ -279,9 +294,11 @@ function remove_terms( $object_id, $tt_ids, $taxonomy ) {
 		return;
 	}
 
-	$removed_terms = get_terms( array(
-		'term_taxonomy_id' => $tt_ids,
-	) );
+	$removed_terms = get_terms(
+		array(
+			'term_taxonomy_id' => $tt_ids,
+		)
+	);
 	$removed_terms = array_map(
 		function( \WP_Term $term ) {
 			return $term->name;
@@ -292,8 +309,10 @@ function remove_terms( $object_id, $tt_ids, $taxonomy ) {
 	$taxonomy_labels = get_taxonomy_labels( get_taxonomy( $taxonomy ) );
 
 	$msg = sprintf(
+		// translators: 1. Name of the taxonomy; 2. List of term names;
 		__( '%1$s removed: %2$s', 'wporg' ),
 		$taxonomy_labels->name,
+		// translators: used between list items, there is a space after the comma.
 		implode( __( ', ', 'wporg' ), $removed_terms )
 	);
 
