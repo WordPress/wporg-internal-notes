@@ -14,6 +14,11 @@
 		padding: 0.5rem;
 	}
 
+	.filter-wporg-internal-note &.log-note,
+	.filter-wporg-log-note &.internal-note {
+		display: none;
+	}
+
 	.components-button {
 		height: auto;
 		width: auto;
@@ -31,7 +36,8 @@
 	opacity: 0;
 	transition: opacity 300ms ease-in-out;
 
-	.wporg-internal-notes__note:hover & {
+	.wporg-internal-notes__note:hover &,
+	.wporg-internal-notes__note:focus & {
 		opacity: 100;
 	}
 }

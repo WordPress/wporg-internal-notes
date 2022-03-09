@@ -9,7 +9,16 @@ import { apiFetch } from '@wordpress/data-controls';
 import { TYPES } from './action-types';
 import { fetchNotes, getApiPath } from './utils';
 
-const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, PREPEND_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
+const {
+	CREATE_NOTE,
+	DELETE_NOTE,
+	SET_NOTES,
+	PREPEND_NOTES,
+	APPEND_NOTES,
+	CLEAR_IS_CREATED,
+	SET_IS_DELETED,
+	SET_FILTER,
+} = TYPES;
 
 export function* createNote( noteData ) {
 	const queryArgs = {
@@ -88,3 +97,10 @@ export function* appendNotes( offset ) {
 		notes,
 	};
 }
+
+export const setFilter = ( filter ) => {
+	return {
+		type: SET_FILTER,
+		filter,
+	};
+};

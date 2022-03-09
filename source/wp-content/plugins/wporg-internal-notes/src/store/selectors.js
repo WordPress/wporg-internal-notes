@@ -21,3 +21,13 @@ export function isDeleted( state, noteId ) {
 export function getLatestNoteDate( state ) {
 	return state.notes.at(0)?.date || '';
 }
+
+export function getFilter( state ) {
+	return state.filter;
+}
+
+export function getNoteTypes( state ) {
+	const types = state.notes.map( note => note.type );
+
+	return [ ...new Set( types ) ];
+}
