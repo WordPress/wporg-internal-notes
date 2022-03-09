@@ -37,7 +37,7 @@
 	transition: opacity 300ms ease-in-out;
 
 	.wporg-internal-notes__note:hover &,
-	.wporg-internal-notes__note:focus & {
+	.wporg-internal-notes__note:focus-within & {
 		opacity: 100;
 	}
 }
