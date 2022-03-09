@@ -19,7 +19,7 @@ export function isDeleted( state, noteId ) {
 }
 
 export function getLatestNoteDate( state ) {
-	return state.notes.at(0)?.date || '';
+	return state.notes.at( 0 )?.date || '';
 }
 
 export function getFilter( state ) {
@@ -27,7 +27,7 @@ export function getFilter( state ) {
 }
 
 export function getNoteTypes( state ) {
-	const types = state.notes.map( note => note.type );
+	const types = state.notes.map( ( note ) => note.type );
 
 	return [ ...new Set( types ) ];
 }

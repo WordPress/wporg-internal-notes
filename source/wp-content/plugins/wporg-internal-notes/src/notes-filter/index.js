@@ -26,7 +26,7 @@ export const NotesFilter = () => {
 		all: __( 'All Notes', 'wporg' ),
 		'wporg-internal-note': __( 'Internal Notes', 'wporg' ),
 		'wporg-log-note': __( 'Log Notes', 'wporg' ),
-	}
+	};
 
 	const [ dropDownLabel, setDropDownLabel ] = useState( controlLabels[ currentFilter ] );
 
@@ -40,34 +40,34 @@ export const NotesFilter = () => {
 			},
 		},
 		{
-			title: controlLabels['wporg-internal-note'],
+			title: controlLabels[ 'wporg-internal-note' ],
 			disabled: 'wporg-internal-note' === currentFilter,
 			onClick: () => {
 				setFilter( 'wporg-internal-note' );
-				setDropDownLabel( controlLabels['wporg-internal-note'] );
+				setDropDownLabel( controlLabels[ 'wporg-internal-note' ] );
 			},
 		},
 		{
-			title: controlLabels['wporg-log-note'],
+			title: controlLabels[ 'wporg-log-note' ],
 			disabled: 'wporg-log-note' === currentFilter,
 			onClick: () => {
 				setFilter( 'wporg-log-note' );
-				setDropDownLabel( controlLabels['wporg-log-note'] );
+				setDropDownLabel( controlLabels[ 'wporg-log-note' ] );
 			},
 		},
 	];
 
 	return (
 		<>
-			{ hasMultipleTypes &&
+			{ hasMultipleTypes && (
 				<DropdownMenu
 					className="wporg-internal-notes__filter"
-					icon='filter'
+					icon="filter"
 					label={ __( 'Filter notes', 'wporg' ) }
 					text={ dropDownLabel }
 					controls={ controls }
 				/>
-			}
+			) }
 		</>
 	);
 };

@@ -133,7 +133,9 @@ export const NotesListItem = ( { className, note } ) => {
 		<li className={ classes }>
 			<header className="wporg-internal-notes__note-header">
 				<div className="wporg-internal-notes__note-author">
-					{ avatarUrl && <img className="wporg-internal-notes__note-author-avatar" src={ avatarUrl } alt="" /> }
+					{ avatarUrl && (
+						<img className="wporg-internal-notes__note-author-avatar" src={ avatarUrl } alt="" />
+					) }
 					<a
 						className="wporg-internal-notes__note-author-name"
 						href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }

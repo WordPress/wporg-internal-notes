@@ -26,14 +26,11 @@ export const NoteForm = () => {
 		<PanelBody className="wporg-internal-notes__note-form">
 			{ isOpen && (
 				<>
-					{ 'wporg-log-note' === currentFilter &&
-						<Notice
-							status="warning"
-							isDismissible={ false }
-						>
+					{ 'wporg-log-note' === currentFilter && (
+						<Notice status="warning" isDismissible={ false }>
 							{ __( 'Internal notes are currently hidden by the filter.', 'wporg' ) }
 						</Notice>
-					}
+					) }
 					<TextareaControl
 						className="wporg-internal-notes__note-form-textarea"
 						label={ __( 'Add a note', 'wporg' ) }

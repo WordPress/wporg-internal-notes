@@ -20,10 +20,7 @@ export const NotesList = ( { notes } ) => {
 		return select( notesStore ).getFilter();
 	} );
 
-	const classes = classnames(
-		'wporg-internal-notes__notes-list',
-		'filter-' + currentFilter,
-	);
+	const classes = classnames( 'wporg-internal-notes__notes-list', 'filter-' + currentFilter );
 
 	return (
 		<ul className={ classes }>

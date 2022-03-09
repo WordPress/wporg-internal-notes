@@ -66,11 +66,11 @@ export const NotesSidebar = () => {
 			icon={ <SidebarIcon /> }
 		>
 			<NoteForm />
-			{ isLoading &&
+			{ isLoading && (
 				<PanelBody>
 					<Spinner />
 				</PanelBody>
-			}
+			) }
 			<NotesList notes={ initialNotes } />
 			<LoadMore />
 		</PluginSidebar>
