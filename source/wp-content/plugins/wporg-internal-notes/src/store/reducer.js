@@ -59,7 +59,7 @@ export const reducer = ( state = DEFAULT_STATE, { note, notes, noteId, totalNote
 
 			return {
 				...state,
-				totalNotes: state.totalNotes + notes.length,
+				totalNotes: state.totalNotes + totalNotes,
 				notes: [ ...notes, ...state.notes ],
 				isCreated: [ ...state.isCreated, ...prependedNoteIds ],
 			};
