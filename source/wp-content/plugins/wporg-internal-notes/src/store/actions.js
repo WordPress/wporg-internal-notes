@@ -89,11 +89,10 @@ export function* prependNotes( after ) {
 }
 
 export function* appendNotes( offset ) {
-	const { totalNotes, notes } = yield fetchNotes( { offset } );
+	const { notes } = yield fetchNotes( { offset } );
 
 	return {
 		type: APPEND_NOTES,
-		totalNotes: totalNotes,
 		notes: notes,
 	};
 }

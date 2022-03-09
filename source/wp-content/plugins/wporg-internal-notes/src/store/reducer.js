@@ -68,7 +68,6 @@ export const reducer = ( state = DEFAULT_STATE, { note, notes, noteId, totalNote
 
 			return {
 				...state,
-				totalNotes: state.totalNotes, // Just retrieving more notes, not changing the total.
 				notes: [ ...state.notes, ...notes ],
 				isCreated: [ ...state.isCreated, ...appendedNoteIds ],
 			};
