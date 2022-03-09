@@ -1,6 +1,7 @@
 {
   "name": "wporg/wporg-internal-notes",
   "description": "",
+  "type": "wordpress-plugin",
   "homepage": "https://wordpress.org",
   "license": "GPL-2.0-or-later",
   "support": {
