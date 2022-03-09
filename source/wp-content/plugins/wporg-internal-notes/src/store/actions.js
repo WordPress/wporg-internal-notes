@@ -43,7 +43,7 @@ export function* createNote( noteData ) {
 export const clearIsCreated = ( noteId ) => {
 	return {
 		type: CLEAR_IS_CREATED,
-		noteId,
+		noteId: noteId,
 	};
 };
 
@@ -56,7 +56,7 @@ export function* deleteNote( noteId ) {
 	if ( result ) {
 		return {
 			type: DELETE_NOTE,
-			noteId,
+			noteId: noteId,
 		};
 	}
 }
@@ -64,7 +64,7 @@ export function* deleteNote( noteId ) {
 export const setIsDeleted = ( noteId ) => {
 	return {
 		type: SET_IS_DELETED,
-		noteId,
+		noteId: noteId,
 	};
 };
 
@@ -73,8 +73,8 @@ export function* setNotes() {
 
 	return {
 		type: SET_NOTES,
-		totalNotes,
-		notes,
+		totalNotes: totalNotes,
+		notes: notes,
 	};
 }
 
@@ -83,8 +83,8 @@ export function* prependNotes( after ) {
 
 	return {
 		type: PREPEND_NOTES,
-		totalNotes,
-		notes,
+		totalNotes: totalNotes,
+		notes: notes,
 	};
 }
 
@@ -93,14 +93,14 @@ export function* appendNotes( offset ) {
 
 	return {
 		type: APPEND_NOTES,
-		totalNotes,
-		notes,
+		totalNotes: totalNotes,
+		notes: notes,
 	};
 }
 
 export const setFilter = ( filter ) => {
 	return {
 		type: SET_FILTER,
-		filter,
+		filter: filter,
 	};
 };

@@ -19,11 +19,11 @@ export const getApiPath = ( { noteId, queryArgs = [] } ) => {
 };
 
 export function* fetchNotes( { after = null, offset = 0 } ) {
-	let queryArgs = {
+	const queryArgs = {
 		_embed: true,
 		context: 'edit',
 		per_page: 20,
-		offset,
+		offset: offset,
 	};
 
 	if ( after ) {

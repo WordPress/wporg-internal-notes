@@ -121,6 +121,7 @@ export const NotesListItem = ( { className, note } ) => {
 						className="wporg-internal-notes__note-author-name"
 						href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }
 						target="_blank"
+						rel="noreferrer"
 					>
 						{ sprintf( '@%s', slug ) }
 					</a>
@@ -140,6 +141,7 @@ export const NotesListItem = ( { className, note } ) => {
 						className="wporg-internal-notes__note-author-name"
 						href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }
 						target="_blank"
+						rel="noreferrer"
 					>
 						{ sprintf( '@%s', slug ) }
 					</a>

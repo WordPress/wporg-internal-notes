@@ -75,7 +75,7 @@ export const reducer = ( state = DEFAULT_STATE, { note, notes, noteId, totalNote
 		case SET_FILTER:
 			return {
 				...state,
-				filter: filter,
+				filter,
 			};
 		default:
 			return state;

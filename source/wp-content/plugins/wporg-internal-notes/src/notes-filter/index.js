@@ -30,7 +30,7 @@ export const NotesFilter = () => {
 
 	const [ dropDownLabel, setDropDownLabel ] = useState( controlLabels[ currentFilter ] );
 
-	let controls = [
+	const controls = [
 		{
 			title: controlLabels.all,
 			disabled: 'all' === currentFilter,
