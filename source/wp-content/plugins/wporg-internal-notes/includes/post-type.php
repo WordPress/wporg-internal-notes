@@ -91,6 +91,7 @@ function get_notes( $post_id, $query_args = array(), $wp_query = false ) {
 		)
 	);
 
+	$query_args['orderby']     = 'date ID';
 	$query_args['post_type']   = array_intersect( $post_types, (array) $query_args['post_type'] ) ?: $post_types;
 	$query_args['post_parent'] = $post_id;
 	$query_args['post_status'] = 'private';
