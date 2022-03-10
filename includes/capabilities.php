@@ -21,8 +21,8 @@ add_filter( 'map_meta_cap', __NAMESPACE__ . '\map_meta_caps', 10, 4 );
  */
 function map_meta_caps( $required_caps, $current_cap, $user_id, $args ) {
 	switch ( $current_cap ) {
-		case 'read-internal-notes':
-		case 'create-internal-note':
+		case 'read-notes':
+		case 'create-note':
 			$required_caps = array();
 
 			$parent = get_post( $args[0] );
@@ -44,11 +44,18 @@ function map_meta_caps( $required_caps, $current_cap, $user_id, $args ) {
 
 			$required_caps[] = $post_type->cap->edit_others_posts;
 			break;
-		case 'delete-internal-note':
+		case 'delete-note':
 			$required_caps = array();
 
 			$note = get_post( $args[0] );
 			if ( ! $note ) {
+				$required_caps[] = 'do_not_allow';
+				break;
+			}
+
+			$note_type = get_post_type( $note );
+			if ( NOTE_POST_TYPE !== $note_type ) {
+				// Log notes should not be deleted.
 				$required_caps[] = 'do_not_allow';
 				break;
 			}
@@ -66,7 +73,6 @@ function map_meta_caps( $required_caps, $current_cap, $user_id, $args ) {
 			}
 
 			// TODO maybe only allow deleting your own notes?
-
 			$required_caps[] = $post_type->cap->edit_others_posts;
 			break;
 	}

@@ -36,6 +36,7 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_editor_asse
 function load() {
 	require_once PLUGIN_DIR . 'includes/capabilities.php';
 	require_once PLUGIN_DIR . 'includes/class-rest-controller.php';
+	require_once PLUGIN_DIR . 'includes/logging.php';
 	require_once PLUGIN_DIR . 'includes/post-type.php';
 }
 
@@ -69,7 +70,7 @@ function enqueue_editor_assets() {
 		return;
 	}
 
-	if ( ! current_user_can( 'read-internal-notes', $post->ID ) ) {
+	if ( ! current_user_can( 'read-notes', $post->ID ) ) {
 		return;
 	}
 
