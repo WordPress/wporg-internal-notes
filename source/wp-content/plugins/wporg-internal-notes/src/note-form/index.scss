@@ -3,6 +3,14 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+
+	.components-panel__row {
+		width: 100%;
+	}
+
+	.components-notice {
+		margin-bottom: 1em;
+	}
 }
 
 .wporg-internal-notes__note-form-buttons {

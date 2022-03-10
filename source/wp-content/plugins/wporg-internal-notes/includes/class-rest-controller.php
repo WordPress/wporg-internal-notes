@@ -124,16 +124,19 @@ class REST_Controller extends \WP_REST_Controller {
 
 		switch ( $request->get_method() ) {
 			case \WP_REST_Server::READABLE:
-				$cap = 'read-internal-notes';
+				$cap = 'read-notes';
 				$arg = $parent->ID;
+				$msg = __( 'Sorry, you are not allowed to access internal notes on this post.', 'wporg' );
 				break;
 			case \WP_REST_Server::CREATABLE:
-				$cap = 'create-internal-note';
+				$cap = 'create-note';
 				$arg = $parent->ID;
+				$msg = __( 'Sorry, you are not allowed to create internal notes on this post.', 'wporg' );
 				break;
 			case \WP_REST_Server::DELETABLE:
-				$cap = 'delete-internal-note';
+				$cap = 'delete-note';
 				$arg = $request['id'];
+				$msg = __( 'Sorry, you are not allowed to delete this note.', 'wporg' );
 				break;
 			default:
 				$cap = 'do_not_allow';
@@ -144,7 +147,7 @@ class REST_Controller extends \WP_REST_Controller {
 		if ( ! current_user_can( $cap, $arg ) ) {
 			return new \WP_Error(
 				'rest_cannot_access',
-				__( 'Sorry, you are not allowed to access internal notes on this post.', 'wporg' ),
+				$msg,
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -168,15 +171,24 @@ class REST_Controller extends \WP_REST_Controller {
 		$args = array();
 
 		$collection_params = array(
+			'offset'   => 'offset',
 			'order'    => 'order',
 			'page'     => 'paged',
 			'per_page' => 'posts_per_page',
-			'offset'   => 'offset',
 		);
 		foreach ( $collection_params as $request_param => $query_param ) {
 			if ( isset( $request[ $request_param ] ) ) {
 				$args[ $query_param ] = $request[ $request_param ];
 			}
+		}
+
+		if ( isset( $request['after'] ) ) {
+			$args['date_query'] = array(
+				array(
+					'after'  => $request['after'],
+					'column' => 'post_date',
+				),
+			);
 		}
 
 		$notes_query = get_notes( $parent->ID, $args, true );
@@ -328,14 +340,15 @@ class REST_Controller extends \WP_REST_Controller {
 			human_time_diff( strtotime( $note->post_date_gmt ), time() )
 		);
 
+		$data['id']     = (int) $note->ID;
+		$data['parent'] = (int) $note->post_parent;
+		$data['author'] = (int) $note->post_author;
+		$data['type']   = $note->post_type;
+
 		$data['excerpt'] = array(
 			'raw'       => $note->post_excerpt,
 			'rendered'  => wpautop( $note->post_excerpt ),
 		);
-
-		$data['id']     = (int) $note->ID;
-		$data['author'] = (int) $note->post_author;
-		$data['parent'] = (int) $note->post_parent;
 
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data     = $this->filter_response_by_context( $data, $context );
@@ -430,6 +443,13 @@ class REST_Controller extends \WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'type'         => array(
+					'description' => __( 'Type of note.', 'wporg' ),
+					'type'        => 'string',
+					'enum'        => get_note_post_types(),
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
 				'excerpt'       => array(
 					'description' => __( 'The excerpt for the post.', 'wporg' ),
 					'type'        => 'object',
@@ -472,6 +492,12 @@ class REST_Controller extends \WP_REST_Controller {
 		$params['offset'] = array(
 			'description' => __( 'Offset the result set by a specific number of items.', 'wporg' ),
 			'type'        => 'integer',
+		);
+
+		$params['after'] = array(
+			'description' => __( 'Limit response to posts published after a given ISO8601 compliant date.', 'wporg' ),
+			'type'        => 'string',
+			'format'      => 'date-time',
 		);
 
 		$params['order'] = array(
@@ -530,7 +556,7 @@ class REST_Controller extends \WP_REST_Controller {
 		}
 
 		$post = get_post( (int) $note_id );
-		if ( empty( $post ) || empty( $post->ID ) || POST_TYPE !== $post->post_type ) {
+		if ( empty( $post ) || empty( $post->ID ) || ! in_array( $post->post_type, get_note_post_types(), true ) ) {
 			return $error;
 		}
 

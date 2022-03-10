@@ -3,16 +3,26 @@
  */
 import { TYPES } from './action-types';
 
-const { CREATE_NOTE, DELETE_NOTE, SET_NOTES, APPEND_NOTES, CLEAR_IS_CREATED, SET_IS_DELETED } = TYPES;
+const {
+	CREATE_NOTE,
+	DELETE_NOTE,
+	SET_NOTES,
+	PREPEND_NOTES,
+	APPEND_NOTES,
+	CLEAR_IS_CREATED,
+	SET_IS_DELETED,
+	SET_FILTER,
+} = TYPES;
 
 const DEFAULT_STATE = {
 	totalNotes: 0,
 	notes: [],
 	isCreated: [],
 	isDeleted: [],
+	filter: 'all',
 };
 
-export const reducer = ( state = DEFAULT_STATE, { note, notes, noteId, totalNotes, type } ) => {
+export const reducer = ( state = DEFAULT_STATE, { note, notes, noteId, totalNotes, type, filter } ) => {
 	switch ( type ) {
 		case CREATE_NOTE:
 			return {
@@ -44,14 +54,27 @@ export const reducer = ( state = DEFAULT_STATE, { note, notes, noteId, totalNote
 				totalNotes,
 				notes,
 			};
-		case APPEND_NOTES:
-			const noteIds = notes.map( ( appendedNote ) => appendedNote.id );
+		case PREPEND_NOTES:
+			const prependedNoteIds = notes.map( ( prependedNote ) => prependedNote.id );
 
 			return {
 				...state,
-				totalNotes,
+				totalNotes: state.totalNotes + totalNotes,
+				notes: [ ...notes, ...state.notes ],
+				isCreated: [ ...state.isCreated, ...prependedNoteIds ],
+			};
+		case APPEND_NOTES:
+			const appendedNoteIds = notes.map( ( appendedNote ) => appendedNote.id );
+
+			return {
+				...state,
 				notes: [ ...state.notes, ...notes ],
-				isCreated: [ ...state.isCreated, ...noteIds ],
+				isCreated: [ ...state.isCreated, ...appendedNoteIds ],
+			};
+		case SET_FILTER:
+			return {
+				...state,
+				filter,
 			};
 		default:
 			return state;

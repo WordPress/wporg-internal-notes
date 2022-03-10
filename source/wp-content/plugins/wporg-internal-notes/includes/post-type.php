@@ -7,35 +7,68 @@ defined( 'WPINC' ) || die();
 /**
  * Constants.
  */
-const POST_TYPE = 'wporg-internal-note';
+const NOTE_POST_TYPE = 'wporg-internal-note';
+const LOG_POST_TYPE = 'wporg-log-note';
 
 /**
  * Actions and filters.
  */
-add_action( 'init', __NAMESPACE__ . '\register_cpt' );
+add_action( 'init', __NAMESPACE__ . '\register_cpts' );
 
 /**
  * Register the custom post type.
  *
  * @return void
  */
-function register_cpt() {
+function register_cpts() {
 	register_post_type(
-		POST_TYPE,
+		NOTE_POST_TYPE,
 		array(
 			'label'            => __( 'Internal Notes', 'wporg' ),
+			'labels'           => array(
+				'singular_name' => __( 'Internal Note', 'wporg' ),
+			),
 			'public'           => false,
 			'show_in_rest'     => false,
 			'capabilities'     => array(
-				'create-internal-note',
-				'delete-internal-note',
-				'read-internal-notes',
+				'create-note',
+				'delete-note',
+				'read-notes',
 			),
 			'supports'         => array( 'author', 'excerpt' ),
 			'can_export'       => false,
 			'delete_with_user' => false,
 		)
 	);
+
+	register_post_type(
+		LOG_POST_TYPE,
+		array(
+			'label'            => __( 'Log Notes', 'wporg' ),
+			'labels'           => array(
+				'singular_name' => __( 'Log Note', 'wporg' ),
+			),
+			'public'           => false,
+			'show_in_rest'     => false,
+			'capabilities'     => array(
+				'create-note',
+				'delete-note',
+				'read-notes',
+			),
+			'supports'         => array( 'author', 'excerpt' ),
+			'can_export'       => false,
+			'delete_with_user' => false,
+		)
+	);
+}
+
+/**
+ * Get an array of post types for this plugin.
+ *
+ * @return string[]
+ */
+function get_note_post_types() {
+	return array( NOTE_POST_TYPE, LOG_POST_TYPE );
 }
 
 /**
@@ -48,14 +81,18 @@ function register_cpt() {
  * @return array|\WP_Query
  */
 function get_notes( $post_id, $query_args = array(), $wp_query = false ) {
+	$post_types = get_note_post_types();
+
 	$query_args = wp_parse_args(
 		$query_args,
 		array(
-			'order' => 'desc',
+			'order'     => 'desc',
+			'post_type' => $post_types,
 		)
 	);
 
-	$query_args['post_type']   = POST_TYPE;
+	$query_args['orderby']     = 'date ID';
+	$query_args['post_type']   = array_intersect( $post_types, (array) $query_args['post_type'] ) ?: $post_types;
 	$query_args['post_parent'] = $post_id;
 	$query_args['post_status'] = 'private';
 
@@ -77,15 +114,18 @@ function get_notes( $post_id, $query_args = array(), $wp_query = false ) {
  * @return int|\WP_Error
  */
 function create_note( $post_id, $note_data ) {
+	$post_types = get_note_post_types();
+
 	$note_data = wp_parse_args(
 		$note_data,
 		array(
 			'post_author'  => get_current_user_id(),
 			'post_excerpt' => '',
+			'post_type'    => NOTE_POST_TYPE,
 		)
 	);
 
-	$note_data['post_type']   = POST_TYPE;
+	$note_data['post_type']   = in_array( $note_data['post_type'], $post_types, true ) ? $note_data['post_type'] : NOTE_POST_TYPE;
 	$note_data['post_parent'] = $post_id;
 	$note_data['post_status'] = 'private';
 
@@ -95,12 +135,14 @@ function create_note( $post_id, $note_data ) {
 /**
  * Permanently delete a note.
  *
+ * Note that log notes should never be deleted.
+ *
  * @param int $note_id The ID of the note post.
  *
  * @return bool|\WP_Error
  */
 function delete_note( $note_id ) {
-	if ( POST_TYPE !== get_post_type( $note_id ) ) {
+	if ( NOTE_POST_TYPE !== get_post_type( $note_id ) ) {
 		return new \WP_Error(
 			'invalid_post',
 			__( 'Could not delete object because it is not a note.', 'wporg' )

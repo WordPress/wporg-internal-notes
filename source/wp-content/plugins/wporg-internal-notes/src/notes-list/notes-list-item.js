@@ -72,7 +72,7 @@ const DeleteButton = ( { noteId } ) => {
 };
 
 export const NotesListItem = ( { className, note } ) => {
-	const { id: noteId, date_gmt: dateIso, date_relative: dateRelative } = note;
+	const { id: noteId, date_gmt: dateIso, date_relative: dateRelative, type } = note;
 	const author = note?._embedded?.author?.[ 0 ];
 	const avatarUrl = author?.avatar_urls?.[ '24' ] || '';
 	const slug = author?.slug || 'unknown';
@@ -101,32 +101,59 @@ export const NotesListItem = ( { className, note } ) => {
 	const classes = classnames(
 		'wporg-internal-notes__note',
 		{
+			'internal-note': 'wporg-internal-note' === type,
+			'log-note': 'wporg-log-note' === type,
 			'is-created': isCreated,
 			'is-deleted': isDeleted,
 		},
 		className
 	);
 
-	return (
-		<li className={ classes }>
-			<header className="wporg-internal-notes__note-header">
-				<div>
-					<div className="wporg-internal-notes__note-author">
-						{ avatarUrl && <img className="wporg-internal-notes__note-author-avatar" src={ avatarUrl } alt="" /> }
-						<a
-							className="wporg-internal-notes__note-author-name"
-							href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }
-						>
-							{ sprintf( '@%s', slug ) }
-						</a>
-					</div>
+	if ( 'wporg-log-note' === type ) {
+		return (
+			<li className={ classes }>
+				<RawHTML className="wporg-internal-notes__note-excerpt">{ excerpt }</RawHTML>
+				<footer className="wporg-internal-notes__note-footer">
 					<time className="wporg-internal-notes__note-date" title={ dateIso } dateTime={ dateIso }>
 						{ dateRelative }
 					</time>
+					<a
+						className="wporg-internal-notes__note-author-name"
+						href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }
+						target="_blank"
+						rel="noreferrer"
+					>
+						{ sprintf( '@%s', slug ) }
+					</a>
+				</footer>
+			</li>
+		);
+	}
+
+	return (
+		<li className={ classes }>
+			<header className="wporg-internal-notes__note-header">
+				<div className="wporg-internal-notes__note-author">
+					{ avatarUrl && (
+						<img className="wporg-internal-notes__note-author-avatar" src={ avatarUrl } alt="" />
+					) }
+					<a
+						className="wporg-internal-notes__note-author-name"
+						href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }
+						target="_blank"
+						rel="noreferrer"
+					>
+						{ sprintf( '@%s', slug ) }
+					</a>
 				</div>
 				<DeleteButton noteId={ noteId } />
 			</header>
 			<RawHTML className="wporg-internal-notes__note-excerpt">{ excerpt }</RawHTML>
+			<footer className="wporg-internal-notes__note-footer">
+				<time className="wporg-internal-notes__note-date" title={ dateIso } dateTime={ dateIso }>
+					{ dateRelative }
+				</time>
+			</footer>
 		</li>
 	);
 };
