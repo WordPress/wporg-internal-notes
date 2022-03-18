@@ -66,7 +66,9 @@ function post_update( $post_ID, $post_after, $post_before ) {
 		return;
 	}
 
-	$diff = array_diff( $post_after->to_array(), $post_before->to_array() );
+	$after = array_map( 'maybe_serialize', $post_after->to_array() );
+	$before = array_map( 'maybe_serialize', $post_before->to_array() );
+	$diff = array_diff( $after, $before );
 	$changed_fields = array_keys( $diff );
 
 	$omit_fields = array( 'post_status', 'post_date_gmt', 'post_modified', 'post_modified_gmt' );
