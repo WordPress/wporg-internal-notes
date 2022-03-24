@@ -37,7 +37,7 @@ class REST_Controller extends \WP_REST_Controller {
 	 * @param string $parent_post_type Post type of the parent.
 	 */
 	public function __construct( $parent_post_type ) {
-		$this->namespace = 'wp/v2';
+		$this->namespace = 'wporg/v1';
 		$this->rest_base = 'internal-notes';
 
 		$post_type_object = get_post_type_object( $parent_post_type );
@@ -356,7 +356,7 @@ class REST_Controller extends \WP_REST_Controller {
 
 		$response->add_link(
 			'author',
-			rest_url( sprintf( '%s/%s/%d', $this->namespace, 'users', $data['author'] ) ),
+			rest_url( sprintf( 'wp/v2/users/%d', $data['author'] ) ),
 			array(
 				'embeddable' => true,
 			)

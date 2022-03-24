@@ -10,7 +10,7 @@ export const getApiPath = ( { noteId, queryArgs = [] } ) => {
 	const postType = select( 'core/editor' ).getCurrentPostType();
 	const { rest_base: restBase } = select( 'core' ).getPostType( postType );
 
-	let path = `/wp/v2/${ restBase }/${ postId }/internal-notes`;
+	let path = `/wporg/v1/${ restBase }/${ postId }/internal-notes`;
 	if ( noteId ) {
 		path += `/${ noteId }`;
 	}
