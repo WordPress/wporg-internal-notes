@@ -362,7 +362,14 @@ class REST_Controller extends \WP_REST_Controller {
 			)
 		);
 
-		return $response;
+		/**
+		 * Filter: Modify the response object of an individual note.
+		 *
+		 * @param \WP_REST_Response $response
+		 * @param \WP_Post          $note
+		 * @param \WP_REST_Request  $request
+		 */
+		return apply_filters( 'wporg_internal_notes_rest_prepare_response', $response, $note, $request );
 	}
 
 	/**
