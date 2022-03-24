@@ -76,6 +76,8 @@ export const NotesListItem = ( { className, note } ) => {
 	const author = note?._embedded?.author?.[ 0 ];
 	const avatarUrl = author?.avatar_urls?.[ '24' ] || '';
 	const slug = author?.slug || 'unknown';
+	const handle = sprintf( '@%s', slug );
+	const link = author?.link || '';
 
 	const excerpt = note?.excerpt?.rendered;
 	const { isCreated, isDeleted } = useSelect(
@@ -117,14 +119,21 @@ export const NotesListItem = ( { className, note } ) => {
 					<time className="wporg-internal-notes__note-date" title={ dateIso } dateTime={ dateIso }>
 						{ dateRelative }
 					</time>
-					<a
-						className="wporg-internal-notes__note-author-name"
-						href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }
-						target="_blank"
-						rel="noreferrer"
-					>
-						{ sprintf( '@%s', slug ) }
-					</a>
+					{ link &&
+						<a
+							className="wporg-internal-notes__note-author-name"
+							href={ link }
+							target="_blank"
+							rel="noreferrer"
+						>
+							{ handle }
+						</a>
+					}
+					{ ! link &&
+						<span className="wporg-internal-notes__note-author-name">
+							{ handle }
+						</span>
+					}
 				</footer>
 			</li>
 		);
@@ -137,14 +146,21 @@ export const NotesListItem = ( { className, note } ) => {
 					{ avatarUrl && (
 						<img className="wporg-internal-notes__note-author-avatar" src={ avatarUrl } alt="" />
 					) }
-					<a
-						className="wporg-internal-notes__note-author-name"
-						href={ sprintf( 'https://profiles.wordpress.org/%s', slug ) }
-						target="_blank"
-						rel="noreferrer"
-					>
-						{ sprintf( '@%s', slug ) }
-					</a>
+					{ link &&
+						<a
+							className="wporg-internal-notes__note-author-name"
+							href={ link }
+							target="_blank"
+							rel="noreferrer"
+						>
+							{ handle }
+						</a>
+					}
+					{ ! link &&
+						<span className="wporg-internal-notes__note-author-name">
+							{ handle }
+						</span>
+					}
 				</div>
 				<DeleteButton noteId={ noteId } />
 			</header>
