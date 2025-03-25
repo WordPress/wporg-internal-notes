@@ -212,8 +212,8 @@ function status_change( $new_status, $old_status, $post ) {
 		$msg = sprintf(
 			// translators: 1. Old status; 2. New status;
 			__( 'Status changed from %1$s to %2$s.', 'wporg' ),
-			$old->label ?: $old_status,
-			$new->label ?: $new_status
+			$old->label ?? $old_status,
+			$new->label ?? $new_status
 		);
 	}
 
