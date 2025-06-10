@@ -38,6 +38,7 @@ function load() {
 	require_once PLUGIN_DIR . 'includes/class-rest-controller.php';
 	require_once PLUGIN_DIR . 'includes/logging.php';
 	require_once PLUGIN_DIR . 'includes/post-type.php';
+	require_once PLUGIN_DIR . 'includes/classic.php';
 }
 
 /**
