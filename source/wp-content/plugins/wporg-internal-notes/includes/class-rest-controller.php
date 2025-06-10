@@ -288,9 +288,11 @@ class REST_Controller extends \WP_REST_Controller {
 
 		$excerpt = false;
 		if ( isset( $request['excerpt'] ) && is_string( $request['excerpt'] ) ) {
-			$excerpt = sanitize_textarea_field( $request['excerpt'] );
+			$excerpt = esc_html( $request['excerpt'] );
+			$excerpt = sanitize_textarea_field( $excerpt );
 		} elseif ( isset( $request['excerpt']['raw'] ) && is_string( $request['excerpt']['raw'] ) ) {
-			$excerpt = sanitize_textarea_field( $request['excerpt']['raw'] );
+			$excerpt = esc_html( $request['excerpt']['raw'] );
+			$excerpt = sanitize_textarea_field( $excerpt );
 		}
 
 		if ( ! $excerpt ) {
