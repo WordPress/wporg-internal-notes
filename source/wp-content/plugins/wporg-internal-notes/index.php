@@ -50,11 +50,8 @@ function initialize_rest_endpoints() {
 	$supported_types = get_post_types_by_support( SLUG );
 
 	foreach ( $supported_types as $post_type ) {
-		$object = get_post_type_object( $post_type );
-		if ( true === $object->show_in_rest ) {
-			$controller = new REST_Controller( $post_type );
-			$controller->register_routes();
-		}
+		$controller = new REST_Controller( $post_type );
+		$controller->register_routes();
 	}
 }
 
