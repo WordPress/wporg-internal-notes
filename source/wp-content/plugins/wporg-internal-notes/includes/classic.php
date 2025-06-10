@@ -138,8 +138,6 @@ function render_meta_box( $post ) {
 				$cancelAddNoteButton = $holder.find('.wporg-internal-notes__note-form-button-cancel' ),
 				$submitAddNoteButton = $holder.find('.wporg-internal-notes__note-form-button-submit' );
 
-			console.log( $addNoteButton );
-
 			$addNoteButton.on('click', function() {
 				$holder.find('.classic-form-add, .classic-form-add-note').toggleClass( 'flexhidden' );
 			});
