@@ -22,7 +22,8 @@ function register_meta_box( $post = null ) {
 	if (
 		! $post ||
 		use_block_editor_for_post( $post ) ||
-		! in_array( $post->post_type, get_post_types_by_support( SLUG ) )
+		! in_array( $post->post_type, get_post_types_by_support( SLUG ) ) ||
+		! current_user_can( 'read-notes', $post->ID )
 	) {
 		return;
 	}
@@ -45,7 +46,7 @@ function register_meta_box( $post = null ) {
  * @return void
  */
 function render_meta_box( $post ) {
-	if ( ! current_user_can( 'read-notes', $post->ID )) {
+	if ( ! current_user_can( 'read-notes', $post->ID ) ) {
 		return;
 	}
 	enqueue_editor_assets();
@@ -151,8 +152,6 @@ function render_meta_box( $post ) {
 				if ( ! content ) {
 					return;
 				}
-
-				
 
 				wp.apiFetch( {
 					path: <?php echo json_encode( $api_path ); ?>,
