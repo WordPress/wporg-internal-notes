@@ -32,7 +32,7 @@ function register_meta_box( $post = null ) {
 		__( 'Internal Notes', 'wporg' ),
 		__NAMESPACE__ . '\render_meta_box',
 		$post->post_type,
-		'normal',
+		'side',
 		'high'
 	);
 }
