@@ -141,6 +141,7 @@ class REST_Controller extends \WP_REST_Controller {
 			default:
 				$cap = 'do_not_allow';
 				$arg = null;
+				$msg = __( 'Sorry, you are not allowed to do that.', 'wporg' );
 				break;
 		}
 
